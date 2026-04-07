@@ -37,6 +37,7 @@
             padding: 15px; background: #fff; border-bottom: 4px solid var(--comic-border);
             position: sticky; top: 0; z-index: 100;
         }
+        .counter { font-weight: 900; font-size: 1rem; }
 
         /* --- ESCENA --- */
         .phone-screen { max-width: 380px; width: 100%; display: flex; flex-direction: column; gap: 15px; padding: 15px; box-sizing: border-box; }
@@ -75,7 +76,7 @@
     <div style="width: 100%; max-width: 400px; background: var(--bg-color);">
         <div class="header">
             <button style="font-size: 24px; background:none; border:none; font-weight:900;" onclick="toggleMenu()">☰</button>
-            <div class="counter" id="counter-text">1/34</div>
+            <div class="counter" id="counter-text">1/60</div>
         </div>
 
         <div class="phone-screen">
@@ -132,13 +133,38 @@
             { q: "How long will the journey take?", options: ["Over two hours.", "At midnight.", "I won't be late."], correct: 0, gender: "man", hair: "#004D40", shirt: "#8BC34A" },
             { q: "May I borrow your bracelet, please?", options: ["A little bit.", "In cash.", "Sure."], correct: 2, gender: "woman", hair: "#880E4F", shirt: "#FFEB3B" },
             { q: "Oh, dear! I forgot how to use this cell phone.", options: ["It's repaired.", "Let me help you.", "Be prepared."], correct: 1, gender: "man", hair: "#E65100", shirt: "#03A9F4" },
-            { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, gender: "woman", hair: "#BF360C", shirt: "#4FC3F7" }
+            { q: "I can clean the house for you today.", options: ["That's nice!", "They're mine.", "How many?"], correct: 0, gender: "woman", hair: "#BA68C8", shirt: "#009688" },
+            { q: "Shall we cook something? I'm hungry.", options: ["How often?", "I brought one!", "What about chicken?"], correct: 2, gender: "man", hair: "#795548", shirt: "#FFC107" },
+            { q: "Let's go to the park and play tennis!", options: ["Answer!", "Again?", "Bye."], correct: 1, gender: "woman", hair: "#4527A0", shirt: "#00E676" },
+            { q: "I'm afraid I have to buy a better laptop.", options: ["Not often.", "That's brilliant!", "What's wrong?"], correct: 2, gender: "man", hair: "#37474F", shirt: "#FF3D00" },
+            { q: "Have you joined the theater club yet?", options: ["A month ago.", "Yes, I agree.", "At the moment."], correct: 0, gender: "woman", hair: "#00838F", shirt: "#E91E63" },
+            { q: "Make sure that you keep the medicine in the cabinet.", options: ["It's kind.", "See you soon.", "Of course!"], correct: 2, gender: "man", hair: "#2E7D32", shirt: "#FF9100" },
+            { q: "So, who is going to repair the engine?", options: ["I'll do it myself.", "I'll go straight.", "I'll look for it."], correct: 0, gender: "woman", hair: "#6D4C41", shirt: "#2979FF" },
+            { q: "I can go to the restaurant and get some food.", options: ["Whose rice?", "That's really nice!", "Look at me."], correct: 1, gender: "man", hair: "#4E342E", shirt: "#8BC34A" },
+            { q: "I must go home.", options: ["Who is wrong?", "That's sad!", "It's brilliant."], correct: 1, gender: "woman", hair: "#7B1FA2", shirt: "#FFEB3B" },
+            { q: "I'll give you your earrings back tomorrow.", options: ["It's a special set.", "Sure, no problem.", "Wonderful jewelry."], correct: 1, gender: "man", hair: "#263238", shirt: "#FFEB3B" },
+            { q: "Good to have you back in the school again!", options: ["Yes, that's funny.", "Oh! How silly.", "Thanks, I'm happy."], correct: 2, gender: "woman", hair: "#E91E63", shirt: "#00BCD4" },
+            { q: "Son, stop it! You could hurt someone!", options: ["Help me, mom!", "That's sweet!", "All right!"], correct: 2, gender: "man", hair: "#4A3121", shirt: "#FF5722" },
+            { q: "Do you want to make an appointment with the designer?", options: ["Just before?", "Of course!", "Last February."], correct: 1, gender: "woman", hair: "#F1C40F", shirt: "#4A148C" },
+            { q: "How did you get that dictionary?", options: ["I borrowed it.", "Do you have a dollar?", "A minute ago."], correct: 0, gender: "man", hair: "#37474F", shirt: "#4CAF50" },
+            { q: "We got free tickets. These two are for you.", options: ["Thank you.", "I'm worried.", "That's the best one."], correct: 0, gender: "woman", hair: "#6D4C41", shirt: "#00ACC1" },
+            { q: "What time do you usually start work on weekends?", options: ["At noon.", "Only once.", "It's tomorrow."], correct: 0, gender: "man", hair: "#455A64", shirt: "#F4511E" },
+            { q: "Look at that modern laptop. It's not expensive!", options: ["Anything else?", "It's the winner!", "It's on sale."], correct: 2, gender: "woman", hair: "#C2185B", shirt: "#CDDC39" },
+            { q: "Hey, are you studying Spanish now?", options: ["I'm fine.", "That's right.", "It's ok."], correct: 1, gender: "man", hair: "#1A237E", shirt: "#D81B60" },
+            { q: "Hello. Can you please help me? I've lost my suitcase!", options: ["It's too early.", "Hey! Be careful.", "Can you describe it?"], correct: 2, gender: "woman", hair: "#795548", shirt: "#2E7D32" },
+            { q: "Are you here for the music class?", options: ["See you!", "I'm not from here.", "Yes, I'm new."], correct: 2, gender: "woman", hair: "#FBC02D", shirt: "#009688" },
+            { q: "Let's go for a ride, it's a sunny day!", options: ["Are we around?", "Nothing more.", "It's the best idea!"], correct: 2, gender: "man", hair: "#795548", shirt: "#4CAF50" },
+            { q: "Why didn't you put your new coat on yesterday?", options: ["I liked jeans.", "Let's dress up.", "It was too warm."], correct: 2, gender: "woman", hair: "#4E342E", shirt: "#E91E63" },
+            { q: "This movie is about a really big family.", options: ["Is it good?", "Is that a lot?", "Is your mom OK?"], correct: 0, gender: "man", hair: "#37474F", shirt: "#2196F3" },
+            { q: "Why are they hiding?", options: ["Come on!", "I've got no idea.", "Is it near?"], correct: 1, gender: "woman", hair: "#5D4037", shirt: "#9C27B0" },
+            { q: "Everyone bought tickets for the rock concert.", options: ["Is it on Saturday?", "There was noise.", "It is fair!"], correct: 0, gender: "man", hair: "#1A1A1A", shirt: "#F44336" },
+            { q: "It seems I'll be the new boss of the business department.", options: ["Excuse me!", "It's ready!", "Congratulations!"], correct: 2, gender: "woman", hair: "#F1C40F", shirt: "#3F51B5" },
+            { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, gender: "man", hair: "#BF360C", shirt: "#4FC3F7" }
         ];
 
         let currentIndex = 0;
         let audioCtx = null;
 
-        // Iniciar audio después del primer toque (Requerido por iOS)
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -196,7 +222,7 @@
         }
 
         function verify(btn, selectedIndex) {
-            initAudio(); // Despierta el audio en el toque
+            initAudio();
             if(selectedIndex === database[currentIndex].correct) {
                 btn.classList.add('correct');
                 playTone(600, 'sine', 0.15);
@@ -207,7 +233,6 @@
                 }, 800);
             } else {
                 btn.classList.add('wrong');
-                // HÁPTICA corregida para Safari
                 if (navigator.vibrate) { 
                     navigator.vibrate([100, 50, 100]); 
                 }
