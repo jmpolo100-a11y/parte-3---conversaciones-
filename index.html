@@ -105,7 +105,7 @@
     <div style="width: 100%; max-width: 400px; background: var(--bg-color);">
         <div class="header">
             <button style="font-size: 24px; background:none; border:none; font-weight:900;" onclick="toggleMenu()">☰</button>
-            <div class="counter" id="counter-text">1/24</div>
+            <div class="counter" id="counter-text">1/31</div>
         </div>
 
         <div class="phone-screen">
@@ -152,12 +152,19 @@
             { q: "Have you turned off the computer?", options: ["I don't want it.", "It's on the left.", "I'm still using it."], correct: 2, gender: "woman", hair: "#4CAF50", shirt: "#E91E63" },
             { q: "When do you finish your class?", options: ["Yesterday.", "At six thirty.", "Two hours ago."], correct: 1, gender: "man", hair: "#795548", shirt: "#3F51B5" },
             { q: "I think Jane's a very good teacher.", options: ["Who is it?", "How far?", "Do you?"], correct: 2, gender: "woman", hair: "#311B92", shirt: "#00C853" },
+            { q: "The temperature is below zero here.", options: ["Let's go inside.", "Take off your coat.", "It's downstairs."], correct: 0, gender: "woman", hair: "#1de9b6", shirt: "#00b0ff" },
+            { q: "I couldn't finish my homework, Lily!", options: ["Very often!", "That's terrible!", "Wait for it!"], correct: 1, gender: "man", hair: "#6d4c41", shirt: "#ff5722" },
+            { q: "I don't like meatballs.", options: ["Have some chicken.", "It's in the kitchen.", "That's a lot."], correct: 0, gender: "woman", hair: "#D84315", shirt: "#2E7D32" },
+            { q: "Would you like an apple?", options: ["You're right.", "Yes, please.", "So do I."], correct: 1, gender: "man", hair: "#1A237E", shirt: "#AD1457" },
+            { q: "I think Charlie's is the best café in town!", options: ["How much is it?", "Was it wrong?", "Is it near?"], correct: 2, gender: "woman", hair: "#FFEB3B", shirt: "#6A1B9A" },
+            { q: "I met my new neighbor yesterday. She's a Brazilian singer.", options: ["Welcome!", "Awesome!", "Surprise!"], correct: 1, gender: "man", hair: "#00695C", shirt: "#EF6C00" },
+            { q: "Are you going to the gym tonight?", options: ["Maybe tomorrow.", "Not much.", "Twice a month."], correct: 0, gender: "woman", hair: "#4E342E", shirt: "#1565C0" },
             { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, gender: "man", hair: "#BF360C", shirt: "#4FC3F7" }
         ];
 
         let currentIndex = 0;
 
-        // --- SISTEMA DE AUDIO REINSTALADO ---
+        // --- SISTEMA DE AUDIO ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playTone(freq, type, duration) {
             const osc = audioCtx.createOscillator();
@@ -210,7 +217,7 @@
         function verify(btn, selectedIndex) {
             if(selectedIndex === database[currentIndex].correct) {
                 btn.classList.add('correct');
-                playTone(600, 'sine', 0.15); // Feedback auditivo correcto
+                playTone(600, 'sine', 0.15);
                 showFeedback("¡EXCELENTE!", "🌟", true);
                 setTimeout(() => {
                     if(currentIndex < database.length - 1) { currentIndex++; loadQuestion(); }
@@ -218,9 +225,8 @@
                 }, 800);
             } else {
                 btn.classList.add('wrong');
-                // HÁPTICA REINSTALADA
                 if ("vibrate" in navigator) { navigator.vibrate([100, 50, 100]); }
-                playTone(150, 'square', 0.2); // Feedback auditivo error
+                playTone(150, 'square', 0.2);
                 showFeedback("INTÉNTALO OTRA VEZ", "❌", false);
                 setTimeout(() => btn.classList.remove('wrong'), 800);
             }
