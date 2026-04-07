@@ -8,7 +8,6 @@
         :root {
             --comic-border: #000;
             --bg-color: #ffeb3b;
-            /* Fuente más legible pero con estilo */
             --main-font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -17,38 +16,45 @@
             background-color: var(--bg-color);
             margin: 0; padding: 0;
             display: flex; justify-content: center; min-height: 100vh;
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- HEADER & CONTROLES --- */
+        /* --- SIDEBAR CON SCROLL --- */
+        .sidebar {
+            position: fixed; left: -260px; top: 0; width: 250px; height: 100%;
+            background: #fff; border-right: 4px solid var(--comic-border);
+            z-index: 1000; transition: 0.3s ease; padding: 20px; box-sizing: border-box;
+            display: flex; flex-direction: column;
+        }
+        .sidebar.active { left: 0; }
+        .sidebar h2 { font-weight: 900; border-bottom: 3px solid #000; margin-top: 0; padding-bottom: 10px; }
+        
+        #menu-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        #menu-list::-webkit-scrollbar { width: 8px; }
+        #menu-list::-webkit-scrollbar-thumb { background: #000; border-radius: 10px; }
+
+        .nav-item {
+            display: block; padding: 12px; margin: 8px 0;
+            background: #f0f0f0; border: 3px solid var(--comic-border);
+            text-decoration: none; color: #000; font-weight: 900; border-radius: 8px; text-align: center;
+        }
+
+        /* --- HEADER --- */
         .header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px; background: #fff; border-bottom: 4px solid var(--comic-border);
             position: sticky; top: 0; z-index: 100;
         }
-        .menu-btn { font-size: 24px; cursor: pointer; background: none; border: none; font-weight: 900; }
-        .counter { font-weight: 900; font-size: 1rem; text-transform: uppercase; }
+        .counter { font-weight: 900; font-size: 1rem; }
 
-        /* --- SIDEBAR --- */
-        .sidebar {
-            position: fixed; left: -260px; top: 0; width: 250px; height: 100%;
-            background: #fff; border-right: 4px solid var(--comic-border);
-            z-index: 1000; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 20px; box-sizing: border-box;
-        }
-        .sidebar.active { left: 0; }
-        .nav-item {
-            display: block; padding: 15px; margin: 8px 0;
-            background: #f0f0f0; border: 3px solid var(--comic-border);
-            text-decoration: none; color: #000; font-weight: 900; border-radius: 8px;
-        }
-
-        /* --- ESCENA CÓMIC --- */
+        /* --- ESCENA --- */
         .phone-screen { max-width: 380px; width: 100%; display: flex; flex-direction: column; gap: 15px; padding: 15px; box-sizing: border-box; }
-        
         .scene { display: flex; align-items: flex-start; gap: 10px; margin-top: 5px; min-height: 160px; }
         
-        /* Personaje optimizado */
         .character-art { position: relative; width: 100px; height: 140px; flex-shrink: 0; }
         .face {
             position: absolute; top: 35px; left: 15px; width: 65px; height: 80px;
@@ -61,9 +67,7 @@
         .eye { position: absolute; top: 22px; width: 12px; height: 15px; background: #fff; border: 3px solid var(--comic-border); border-radius: 50%; }
         .eye.left { left: 10px; } .eye.right { right: 10px; }
         .pupil { position: absolute; top: 4px; left: 3px; width: 6px; height: 7px; background: #000; border-radius: 50%; }
-        .is-woman .eye::before { content: '///'; position: absolute; top: -12px; left: -2px; font-size: 10px; font-weight: 900; color: #000; }
 
-        /* BURBUJA LEGILE */
         .speech-bubble {
             position: relative; background: #fff; border: 4px solid var(--comic-border);
             border-radius: 18px; padding: 15px; box-shadow: 6px 6px 0 rgba(0,0,0,0.1); flex-grow: 1;
@@ -71,7 +75,7 @@
         .speech-bubble p { margin: 0; font-size: 1.1rem; font-weight: 800; line-height: 1.2; color: #000; }
         .speech-bubble:after { content: ''; position: absolute; left: -15px; top: 25px; border: 10px solid transparent; border-right-color: #fff; z-index: 11; }
 
-        /* BOTONES DE RESPUESTA */
+        /* --- BOTONES --- */
         .options-area { display: flex; flex-direction: column; gap: 12px; }
         .comic-btn {
             background: #fff; border: 4px solid var(--comic-border); border-radius: 12px;
@@ -79,24 +83,23 @@
             box-shadow: 4px 4px 0 var(--comic-border); transition: 0.1s; text-align: left;
             -webkit-tap-highlight-color: transparent;
         }
-        .comic-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--comic-border); }
+        .correct { background-color: #4caf50 !important; color: white !important; }
+        .wrong { background-color: #f44336 !important; color: white !important; }
 
-        .correct { background-color: #4caf50 !important; color: white !important; border-color: #1b5e20 !important; }
-        .wrong { background-color: #f44336 !important; color: white !important; border-color: #b71c1c !important; }
-
-        /* MENSAJE FLOTANTE */
         #feedback-msg {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            padding: 15px 30px; border-radius: 50px; border: 4px solid #000;
-            font-weight: 900; font-size: 1.2rem; display: none; z-index: 2000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            padding: 15px 25px; border-radius: 50px; border: 4px solid #000;
+            font-weight: 900; font-size: 1.1rem; z-index: 2000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            display: none; align-items: center; justify-content: center; gap: 12px;
+            min-width: 220px; text-align: center;
         }
     </style>
 </head>
 <body>
 
     <div class="sidebar" id="sidebar">
-        <h2 style="font-weight: 900;">REPASAR</h2>
+        <h2>PREGUNTAS</h2>
         <div id="menu-list"></div>
     </div>
     <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; z-index:999;" onclick="toggleMenu()"></div>
@@ -105,8 +108,8 @@
 
     <div style="width: 100%; max-width: 400px; background: var(--bg-color);">
         <div class="header">
-            <button class="menu-btn" onclick="toggleMenu()">☰</button>
-            <div class="counter" id="counter-text">PREGUNTA 1/5</div>
+            <button style="font-size: 24px; background:none; border:none; font-weight:900;" onclick="toggleMenu()">☰</button>
+            <div class="counter" id="counter-text">1/24</div>
         </div>
 
         <div class="phone-screen">
@@ -130,30 +133,39 @@
 
     <script>
         const database = [
-            { q: "Can you hold the camera?", options: ["That's quick!", "Of course.", "May I keep this?"], correct: 1, gender: "man", hair: "#4a3121", shirt: "#3f51b5" },
-            { q: "Honey, I invited my parents to the party.", options: ["Be careful!", "That's great!", "As soon as possible!"], correct: 1, gender: "woman", hair: "#C65102", shirt: "#E91E63" },
-            { q: "Was it a wonderful journey?", options: ["You're lucky!", "Very kind of you!", "Just amazing!"], correct: 2, gender: "man", hair: "#2C3E50", shirt: "#FF9800" },
-            { q: "Hey Mark! You should visit us next November.", options: ["How often?", "I'd love to!", "Let's look for it."], correct: 1, gender: "woman", hair: "#F1C40F", shirt: "#9C27B0" },
-            { q: "Anna missed the train.", options: ["That's terrible!", "Never again.", "How long is it?"], correct: 0, gender: "man", hair: "#4A3121", shirt: "#2196F3" }
+            { q: "Let's go to the zoo tomorrow!", options: ["It is closed.", "How many?", "Nice monkey!"], correct: 0, gender: "man", hair: "#4a3121", shirt: "#3f51b5" },
+            { q: "May I have my bill?", options: ["Not cool.", "A hot drink?", "Sure!"], correct: 2, gender: "woman", hair: "#C65102", shirt: "#E91E63" },
+            { q: "Why is she working at the city center?", options: ["Fine!", "Come on!", "No idea!"], correct: 2, gender: "man", hair: "#2C3E50", shirt: "#FF9800" },
+            { q: "Can you hold the camera?", options: ["That's quick!", "Of course.", "May I keep this?"], correct: 1, gender: "woman", hair: "#F1C40F", shirt: "#9C27B0" },
+            { q: "Honey, I invited my parents to the party.", options: ["Be careful!", "That's great!", "As soon as possible!"], correct: 1, gender: "man", hair: "#4A3121", shirt: "#2196F3" },
+            { q: "Was it a wonderful journey?", options: ["You're lucky!", "Very kind of you!", "Just amazing!"], correct: 2, gender: "woman", hair: "#5D4037", shirt: "#009688" },
+            { q: "Hey Mark! You should visit us next November.", options: ["How often?", "I'd love to!", "Let's look for it."], correct: 1, gender: "man", hair: "#1A1A1A", shirt: "#673AB7" },
+            { q: "Anna missed the train.", options: ["That's terrible!", "Never again.", "How long is it?"], correct: 0, gender: "woman", hair: "#8D6E63", shirt: "#CDDC39" },
+            { q: "Have you got a dress I can wear?", options: ["That's fine!", "Sure!", "Enjoy!"], correct: 1, gender: "man", hair: "#4E342E", shirt: "#3F51B5" },
+            { q: "We couldn't swim in the pool yesterday.", options: ["Be careful!", "That's exciting!", "What happened?"], correct: 2, gender: "woman", hair: "#F48FB1", shirt: "#8E24AA" },
+            { q: "Where did they buy their new car?", options: ["I don't know.", "You are right.", "It's bigger."], correct: 0, gender: "man", hair: "#546E7A", shirt: "#00BCD4" },
+            { q: "I'm going to the art exhibition soon.", options: ["By the way.", "How long ago?", "How interesting!"], correct: 2, gender: "woman", hair: "#FFB300", shirt: "#FF5722" },
+            { q: "We haven't discussed our tour plans yet.", options: ["You poor thing.", "Let's do it now.", "As late as possible."], correct: 1, gender: "man", hair: "#263238", shirt: "#4CAF50" },
+            { q: "Have you got any spare change?", options: ["Let me check", "I've already changed it", "I lost my spare"], correct: 0, gender: "woman", hair: "#795548", shirt: "#009688" },
+            { q: "Until what time does the tube work?", options: ["It goes until summer time", "The last train has already passed", "There's not enough time to work"], correct: 1, gender: "man", hair: "#455A64", shirt: "#607D8B" },
+            { q: "Did he give you the 10 quid I left you?", options: ["He left you there yesterday", "He doesn't like to give anything", "What's that money for?"], correct: 2, gender: "woman", hair: "#A1887F", shirt: "#FF4081" },
+            { q: "It's been a lovely supper, ________?", options: ["hasn't it", "it is", "it has"], correct: 0, gender: "man", hair: "#212121", shirt: "#8BC34A" },
+            { q: "Excuse me! Can you tell me where the loo is?", options: ["It's near the chemist", "It's behind the counter", "It's right there"], correct: 2, gender: "woman", hair: "#FFD54F", shirt: "#673AB7" },
+            { q: "Who's Patricia?", options: ["She's fine.", "She's my friend.", "She's Spanish."], correct: 1, gender: "woman", hair: "#C2185B", shirt: "#FBC02D" },
+            { q: "Could you telephone me this evening?", options: ["I will if I can.", "I'll tell him for you.", "If I'm not there, speak to John."], correct: 0, gender: "man", hair: "#0D47A1", shirt: "#FFCA28" },
+            { q: "Have you turned off the computer?", options: ["I don't want it.", "It's on the left.", "I'm still using it."], correct: 2, gender: "woman", hair: "#4CAF50", shirt: "#E91E63" },
+            { q: "When do you finish your class?", options: ["Yesterday.", "At six thirty.", "Two hours ago."], correct: 1, gender: "man", hair: "#795548", shirt: "#3F51B5" },
+            { q: "I think Jane's a very good teacher.", options: ["Who is it?", "How far?", "Do you?"], correct: 2, gender: "woman", hair: "#311B92", shirt: "#00C853" },
+            { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, gender: "man", hair: "#BF360C", shirt: "#4FC3F7" }
         ];
 
         let currentIndex = 0;
 
-        // Sonidos (Beep básicos de navegador)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playTone(freq, type, duration) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + duration);
-        }
-
         function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').style.display = document.getElementById('sidebar').classList.contains('active') ? 'block' : 'none';
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
         }
 
         function loadQuestion() {
@@ -162,15 +174,11 @@
             document.getElementById('counter-text').innerText = `PREGUNTA ${currentIndex + 1}/${database.length}`;
             
             const hair = document.getElementById('hair-style');
-            const avatar = document.getElementById('avatar-container');
             const shirt = document.getElementById('shirt-style');
-            
             hair.className = "hair " + data.gender;
             hair.style.backgroundColor = data.hair;
             shirt.style.backgroundColor = data.shirt;
             
-            avatar.classList.toggle('is-woman', data.gender === "woman");
-
             const container = document.getElementById('options-container');
             container.innerHTML = '';
             data.options.forEach((opt, index) => {
@@ -182,38 +190,31 @@
             });
         }
 
-        function showFeedback(text, isCorrect) {
+        function showFeedback(text, emoji, isCorrect) {
             const msg = document.getElementById('feedback-msg');
-            msg.innerText = text;
-            msg.style.display = 'block';
+            msg.innerHTML = `<span>${text}</span> <span>${emoji}</span>`;
+            msg.style.display = 'flex';
             msg.style.backgroundColor = isCorrect ? '#4caf50' : '#f44336';
             msg.style.color = 'white';
-            setTimeout(() => { msg.style.display = 'none'; }, 1000);
+            setTimeout(() => { msg.style.display = 'none'; }, 1200);
         }
 
         function verify(btn, selectedIndex) {
             if(selectedIndex === database[currentIndex].correct) {
                 btn.classList.add('correct');
-                playTone(600, 'sine', 0.2); // Sonido éxito
-                showFeedback("¡EXCELENTE! 🌟", true);
+                showFeedback("¡EXCELENTE!", "🌟", true);
                 setTimeout(() => {
-                    if(currentIndex < database.length - 1) {
-                        currentIndex++;
-                        loadQuestion();
-                    } else {
-                        showFeedback("¡COMPLETADO! 🏆", true);
-                    }
+                    if(currentIndex < database.length - 1) { currentIndex++; loadQuestion(); }
+                    else { showFeedback("¡COMPLETADO!", "🏆", true); }
                 }, 800);
             } else {
                 btn.classList.add('wrong');
-                if (navigator.vibrate) navigator.vibrate(200); // Vibración iPhone
-                playTone(150, 'square', 0.3); // Sonido error
-                showFeedback("INTÉNTALO DE NUEVO ❌", false);
+                if ("vibrate" in navigator) { navigator.vibrate([100, 50, 100]); }
+                showFeedback("INTÉNTALO OTRA VEZ", "❌", false);
                 setTimeout(() => btn.classList.remove('wrong'), 800);
             }
         }
 
-        // Inicializar menú
         const list = document.getElementById('menu-list');
         database.forEach((_, i) => {
             const item = document.createElement('div');
