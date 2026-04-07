@@ -29,11 +29,7 @@
         .sidebar.active { left: 0; }
         .sidebar h2 { font-weight: 900; border-bottom: 3px solid #000; margin-top: 0; padding-bottom: 10px; }
         
-        #menu-list {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
+        #menu-list { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
         #menu-list::-webkit-scrollbar { width: 8px; }
         #menu-list::-webkit-scrollbar-thumb { background: #000; border-radius: 10px; }
 
@@ -161,6 +157,18 @@
 
         let currentIndex = 0;
 
+        // --- SISTEMA DE AUDIO REINSTALADO ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
+        }
+
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -196,12 +204,13 @@
             msg.style.display = 'flex';
             msg.style.backgroundColor = isCorrect ? '#4caf50' : '#f44336';
             msg.style.color = 'white';
-            setTimeout(() => { msg.style.display = 'none'; }, 1200);
+            setTimeout(() => { msg.style.display = 'none'; }, 1000);
         }
 
         function verify(btn, selectedIndex) {
             if(selectedIndex === database[currentIndex].correct) {
                 btn.classList.add('correct');
+                playTone(600, 'sine', 0.15); // Feedback auditivo correcto
                 showFeedback("¡EXCELENTE!", "🌟", true);
                 setTimeout(() => {
                     if(currentIndex < database.length - 1) { currentIndex++; loadQuestion(); }
@@ -209,7 +218,9 @@
                 }, 800);
             } else {
                 btn.classList.add('wrong');
+                // HÁPTICA REINSTALADA
                 if ("vibrate" in navigator) { navigator.vibrate([100, 50, 100]); }
+                playTone(150, 'square', 0.2); // Feedback auditivo error
                 showFeedback("INTÉNTALO OTRA VEZ", "❌", false);
                 setTimeout(() => btn.classList.remove('wrong'), 800);
             }
