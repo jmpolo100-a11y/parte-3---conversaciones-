@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICFES Part 3 - Exam Mode Fixed</title>
+    <title>ICFES Part 3 - Exam Mode Corrected</title>
     <style>
         :root {
             --comic-border: #000;
@@ -125,7 +125,7 @@
             { q: "I'm going to the art exhibition soon.", options: ["By the way.", "How long ago?", "How interesting!"], correct: 2, gender: "woman", hair: "#FFB300", shirt: "#FF5722" },
             { q: "We haven't discussed our tour plans yet.", options: ["You poor thing.", "Let's do it now.", "As late as possible."], correct: 1, gender: "man", hair: "#263238", shirt: "#4CAF50" },
             { q: "Have you got any spare change?", options: ["Let me check", "I've already changed it", "I lost my spare"], correct: 0, gender: "woman", hair: "#795548", shirt: "#009688" },
-            { q: "Until what time does the tube work?", options: ["It goes until summer time", "The last train has already passed", "There's not enough time to work"], correct: 1, gender: "man", hair: "#455A64", shirt: "#607D8B" },
+            { q: "Until what time does the tube work?", options: ["It goes until summer time", "The last train has already passed", "There's not enough time to work"], correct: 0, gender: "man", hair: "#455A64", shirt: "#607D8B" }, // CORREGIDA: correct index 0
             { q: "Did he give you the 10 quid I left you?", options: ["He left you there yesterday", "He doesn't like to give anything", "What's that money for?"], correct: 2, gender: "woman", hair: "#A1887F", shirt: "#FF4081" },
             { q: "It's been a lovely supper, ________?", options: ["hasn't it", "it is", "it has"], correct: 0, gender: "man", hair: "#212121", shirt: "#8BC34A" },
             { q: "Excuse me! Can you tell me where the loo is?", options: ["It's near the chemist", "It's behind the counter", "It's right there"], correct: 2, gender: "woman", hair: "#FFD54F", shirt: "#673AB7" },
@@ -214,8 +214,6 @@
         function loadQuestion() {
             isProcessing = false;
             const data = database[currentIndex];
-            
-            // CORRECCIÓN: Actualizar el texto de la burbuja
             document.getElementById('question-text').innerText = data.q;
             document.getElementById('counter-text').innerText = `${currentIndex + 1}/${database.length}`;
             
