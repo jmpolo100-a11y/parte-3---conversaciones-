@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICFES Part 3 - Pro Edition</title>
+    <title>ICFES Part 3 - Exam Mode Fixed</title>
     <style>
         :root {
             --comic-border: #000;
@@ -33,11 +33,13 @@
 
         /* --- HEADER --- */
         .header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px; background: #fff; border-bottom: 4px solid var(--comic-border);
-            position: sticky; top: 0; z-index: 100;
+            display: flex; flex-direction: column; background: #fff; border-bottom: 4px solid var(--comic-border);
+            position: sticky; top: 0; z-index: 100; padding: 10px 15px;
         }
-        .counter { font-weight: 900; font-size: 1rem; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .stats-bar { display: flex; gap: 15px; margin-top: 5px; font-weight: 900; font-size: 0.9rem; }
+        .stat-win { color: #2e7d32; }
+        .stat-loss { color: #c62828; }
 
         /* --- ESCENA --- */
         .phone-screen { max-width: 380px; width: 100%; display: flex; flex-direction: column; gap: 15px; padding: 15px; box-sizing: border-box; }
@@ -57,8 +59,11 @@
         /* --- BOTONES --- */
         .options-area { display: flex; flex-direction: column; gap: 12px; }
         .comic-btn { background: #fff; border: 4px solid var(--comic-border); border-radius: 12px; padding: 18px; font-weight: 900; font-size: 1rem; color: #000; box-shadow: 4px 4px 0 var(--comic-border); transition: 0.1s; text-align: left; -webkit-tap-highlight-color: transparent; }
+        
         .correct { background-color: #4caf50 !important; color: white !important; }
         .wrong { background-color: #f44336 !important; color: white !important; }
+        .reveal { background-color: #2196f3 !important; color: white !important; border-color: #0d47a1 !important; }
+        .disabled { pointer-events: none; opacity: 0.8; }
 
         #feedback-msg { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 50px; border: 4px solid #000; font-weight: 900; font-size: 1.1rem; z-index: 2000; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: none; align-items: center; justify-content: center; gap: 12px; min-width: 220px; text-align: center; }
     </style>
@@ -75,8 +80,14 @@
 
     <div style="width: 100%; max-width: 400px; background: var(--bg-color);">
         <div class="header">
-            <button style="font-size: 24px; background:none; border:none; font-weight:900;" onclick="toggleMenu()">☰</button>
-            <div class="counter" id="counter-text">1/60</div>
+            <div class="header-top">
+                <button style="font-size: 24px; background:none; border:none; font-weight:900;" onclick="toggleMenu()">☰</button>
+                <div style="font-weight: 900;" id="counter-text">1/60</div>
+            </div>
+            <div class="stats-bar">
+                <span class="stat-win">✅: <span id="wins">0</span></span>
+                <span class="stat-loss">❌: <span id="losses">0</span></span>
+            </div>
         </div>
 
         <div class="phone-screen">
@@ -91,7 +102,7 @@
                     <div class="shoulders" id="shirt-style" style="position: absolute; top: 115px; left: 5px; width: 85px; height: 40px; border: 4px solid #000; border-radius: 15px 15px 0 0; z-index: 4;"></div>
                 </div>
                 <div class="speech-bubble">
-                    <p id="question-text">...</p>
+                    <p id="question-text">Loading...</p>
                 </div>
             </div>
             <div class="options-area" id="options-container"></div>
@@ -99,7 +110,7 @@
     </div>
 
     <script>
-        const database = [
+        const originalDatabase = [
             { q: "Let's go to the zoo tomorrow!", options: ["It is closed.", "How many?", "Nice monkey!"], correct: 0, gender: "man", hair: "#4a3121", shirt: "#3f51b5" },
             { q: "May I have my bill?", options: ["Not cool.", "A hot drink?", "Sure!"], correct: 2, gender: "woman", hair: "#C65102", shirt: "#E91E63" },
             { q: "Why is she working at the city center?", options: ["Fine!", "Come on!", "No idea!"], correct: 2, gender: "man", hair: "#2C3E50", shirt: "#FF9800" },
@@ -162,16 +173,24 @@
             { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, gender: "man", hair: "#BF360C", shirt: "#4FC3F7" }
         ];
 
+        let database = [];
         let currentIndex = 0;
+        let scoreWins = 0;
+        let scoreLosses = 0;
         let audioCtx = null;
+        let isProcessing = false;
+
+        function shuffleQuestions(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
         function playTone(freq, type, duration) {
@@ -193,23 +212,67 @@
         }
 
         function loadQuestion() {
+            isProcessing = false;
             const data = database[currentIndex];
+            
+            // CORRECCIÓN: Actualizar el texto de la burbuja
             document.getElementById('question-text').innerText = data.q;
-            document.getElementById('counter-text').innerText = `PREGUNTA ${currentIndex + 1}/${database.length}`;
+            document.getElementById('counter-text').innerText = `${currentIndex + 1}/${database.length}`;
+            
             const hair = document.getElementById('hair-style');
             const shirt = document.getElementById('shirt-style');
             hair.className = "hair " + data.gender;
             hair.style.backgroundColor = data.hair;
             shirt.style.backgroundColor = data.shirt;
+
             const container = document.getElementById('options-container');
             container.innerHTML = '';
+            
             data.options.forEach((opt, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'comic-btn';
+                btn.id = `btn-${index}`;
                 btn.innerText = `${String.fromCharCode(65 + index)}. ${opt}`;
                 btn.onclick = () => verify(btn, index);
                 container.appendChild(btn);
             });
+        }
+
+        function verify(btn, selectedIndex) {
+            if (isProcessing) return;
+            isProcessing = true;
+            initAudio();
+
+            const correctIndex = database[currentIndex].correct;
+            const buttons = document.querySelectorAll('.comic-btn');
+            buttons.forEach(b => b.classList.add('disabled'));
+
+            if(selectedIndex === correctIndex) {
+                btn.classList.add('correct');
+                scoreWins++;
+                document.getElementById('wins').innerText = scoreWins;
+                playTone(600, 'sine', 0.15);
+                showFeedback("¡EXCELENTE!", "🌟", true);
+                setTimeout(nextQuestion, 1200);
+            } else {
+                btn.classList.add('wrong');
+                document.getElementById(`btn-${correctIndex}`).classList.add('reveal');
+                scoreLosses++;
+                document.getElementById('losses').innerText = scoreLosses;
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                playTone(150, 'square', 0.3);
+                showFeedback("INCORRECTO", "❌", false);
+                setTimeout(nextQuestion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            if(currentIndex < database.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                showFeedback("COMPLETADO", "🏆", true);
+            }
         }
 
         function showFeedback(text, emoji, isCorrect) {
@@ -218,40 +281,21 @@
             msg.style.display = 'flex';
             msg.style.backgroundColor = isCorrect ? '#4caf50' : '#f44336';
             msg.style.color = 'white';
-            setTimeout(() => { msg.style.display = 'none'; }, 1000);
+            setTimeout(() => { msg.style.display = 'none'; }, 1500);
         }
 
-        function verify(btn, selectedIndex) {
-            initAudio();
-            if(selectedIndex === database[currentIndex].correct) {
-                btn.classList.add('correct');
-                playTone(600, 'sine', 0.15);
-                showFeedback("¡EXCELENTE!", "🌟", true);
-                setTimeout(() => {
-                    if(currentIndex < database.length - 1) { currentIndex++; loadQuestion(); }
-                    else { showFeedback("¡COMPLETADO!", "🏆", true); }
-                }, 800);
-            } else {
-                btn.classList.add('wrong');
-                if (navigator.vibrate) { 
-                    navigator.vibrate([100, 50, 100]); 
-                }
-                playTone(150, 'square', 0.2);
-                showFeedback("INTÉNTALO OTRA VEZ", "❌", false);
-                setTimeout(() => btn.classList.remove('wrong'), 800);
-            }
-        }
-
-        const list = document.getElementById('menu-list');
-        database.forEach((_, i) => {
-            const item = document.createElement('div');
-            item.className = 'nav-item';
-            item.innerText = `Pregunta ${i + 1}`;
-            item.onclick = () => { currentIndex = i; loadQuestion(); toggleMenu(); };
-            list.appendChild(item);
-        });
-
-        loadQuestion();
+        window.onload = () => {
+            database = shuffleQuestions([...originalDatabase]);
+            const list = document.getElementById('menu-list');
+            database.forEach((_, i) => {
+                const item = document.createElement('div');
+                item.className = 'nav-item';
+                item.innerText = `Pregunta ${i + 1}`;
+                item.onclick = () => { currentIndex = i; loadQuestion(); toggleMenu(); };
+                list.appendChild(item);
+            });
+            loadQuestion();
+        };
     </script>
 </body>
 </html>
