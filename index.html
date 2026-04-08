@@ -49,65 +49,23 @@
         .phone-screen { max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 20px; padding: 20px; box-sizing: border-box; }
         .scene { display: flex; align-items: flex-end; gap: 10px; margin-top: 10px; position: relative; }
 
-        /* ============================================================
-           AVATARES REALISTAS (PURO CSS ADVANCED)
-           ============================================================ */
+        /* AVATARES REALISTAS */
         .avatar-container { position: relative; width: 120px; height: 150px; flex-shrink: 0; }
-        
-        /* Cara con iluminación y volumen */
         .face-real {
             position: absolute; bottom: 35px; left: 15px; width: 85px; height: 105px;
-            background: var(--skin-base);
-            border-radius: 40px 40px 55px 55px;
-            z-index: 5;
+            background: var(--skin-base); border-radius: 40px 40px 55px 55px; z-index: 5;
             box-shadow: inset -5px -10px 15px var(--skin-shadow), inset 5px 5px 10px rgba(255,255,255,0.5);
         }
-
-        /* Ojos con iris detallado */
-        .eye-real {
-            position: absolute; top: 40px; width: 22px; height: 16px;
-            background: #fff; border-radius: 50%;
-            border: 1px solid rgba(0,0,0,0.1);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .eye-real.left { left: 12px; }
-        .eye-real.right { right: 12px; }
-        
-        .iris {
-            width: 12px; height: 12px; border-radius: 50%;
-            background: radial-gradient(circle, #333 20%, var(--iris-color, #555) 70%);
-            position: relative;
-        }
-        .iris::after {
-            content: ''; position: absolute; top: 2px; left: 2px;
-            width: 4px; height: 4px; background: #fff; border-radius: 50%; opacity: 0.8;
-        }
-
-        /* Cabello con capas */
+        .eye-real { position: absolute; top: 40px; width: 22px; height: 16px; background: #fff; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .eye-real.left { left: 12px; } .eye-real.right { right: 12px; }
+        .iris { width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle, #333 20%, var(--iris-color, #555) 70%); position: relative; }
         .hair-real { position: absolute; z-index: 6; }
-        .hair-top {
-            position: absolute; top: -10px; left: 5px; width: 105px; height: 80px;
-            border-radius: 50px 50px 20px 20px;
-            box-shadow: inset 0 5px 15px rgba(255,255,255,0.2);
-        }
-
-        /* Ropa */
-        .clothes {
-            position: absolute; bottom: 0; left: 5px; width: 105px; height: 50px;
-            border-radius: 25px 25px 0 0; z-index: 4;
-            box-shadow: inset 0 5px 10px rgba(0,0,0,0.1);
-        }
+        .hair-top { position: absolute; top: -10px; left: 5px; width: 105px; height: 80px; border-radius: 50px 50px 20px 20px; box-shadow: inset 0 5px 15px rgba(255,255,255,0.2); }
+        .clothes { position: absolute; bottom: 0; left: 5px; width: 105px; height: 50px; border-radius: 25px 25px 0 0; z-index: 4; }
 
         /* BURBUJA INTEGRADA */
-        .speech-bubble { 
-            position: relative; background: #fff; border-radius: 20px; padding: 20px; 
-            box-shadow: var(--shadow-soft); flex-grow: 1; margin-bottom: 25px;
-        }
-        .speech-bubble::after { 
-            content: ''; position: absolute; left: -10px; bottom: 30px;
-            border-width: 12px 12px 12px 0; border-style: solid;
-            border-color: transparent #fff transparent transparent;
-        }
+        .speech-bubble { position: relative; background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow-soft); flex-grow: 1; margin-bottom: 25px; }
+        .speech-bubble::after { content: ''; position: absolute; left: -10px; bottom: 30px; border-width: 12px 12px 12px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
         .speech-bubble p { margin: 0; font-size: 1.1rem; font-weight: 700; line-height: 1.4; }
 
         /* BOTONES */
@@ -121,7 +79,10 @@
         @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
-        /* PANTALLA RESULTADOS */
+        /* FEEDBACK MENSAJES */
+        #feedback-msg { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 50px; font-weight: 800; z-index: 2000; display: none; box-shadow: var(--shadow-soft); color: white; transition: 0.3s; }
+
+        /* RESULTADOS */
         #result-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .result-card { background: #fff; padding: 40px; border-radius: 35px; max-width: 320px; width: 90%; text-align: center; }
         .restart-btn { margin-top: 20px; background: var(--info-color); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 800; cursor: pointer; width: 100%; }
@@ -132,7 +93,7 @@
     <div id="result-screen">
         <div class="result-card">
             <h2 style="font-size: 2rem;">🏆</h2>
-            <h2 style="margin: 10px 0;">¡Simulacro Terminado!</h2>
+            <h2>¡Simulacro Terminado!</h2>
             <p style="font-size: 1.5rem; font-weight: 900;"><span id="final-score">0/0</span></p>
             <p id="final-percent" style="font-weight: 800; color: var(--info-color);">0% de efectividad</p>
             <p id="result-time" style="font-weight: 700;">Tiempo: 00:00</p>
@@ -145,6 +106,8 @@
         <div id="menu-list"></div>
     </div>
     <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999;" onclick="toggleMenu()"></div>
+
+    <div id="feedback-msg"></div>
 
     <div style="width: 100%; max-width: 440px;">
         <div class="header">
@@ -166,9 +129,9 @@
                     <div class="hair-real hair-top" id="hair-main"></div>
                     <div class="clothes" id="clothes-main"></div>
                     <div class="face-real">
-                        <div class="eye-real left"><div class="iris" id="iris-l"></div></div>
-                        <div class="eye-real right"><div class="iris" id="iris-r"></div></div>
-                        <div id="mouth-style" style="position: absolute; bottom: 20px; left: 30px; width: 25px; height: 2px; background: rgba(0,0,0,0.2); border-radius: 10px;"></div>
+                        <div class="eye-real left" id="eye-l-box"><div class="iris" id="iris-l"></div></div>
+                        <div class="eye-real right" id="eye-r-box"><div class="iris" id="iris-r"></div></div>
+                        <div id="mouth-style" style="position: absolute; bottom: 20px; left: 30px; width: 25px; height: 2px; background: rgba(0,0,0,0.4); border-radius: 10px; transition: 0.3s;"></div>
                     </div>
                 </div>
                 
@@ -181,15 +144,13 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN DE LOS 4 PERSONAJES CSS
         const characters = [
-            { name: "Fem1", hair: "#1a1a1a", iris: "#4e342e", clothes: "#ff80ab", type: "long" },
-            { name: "Fem2", hair: "#5d4037", iris: "#2980b9", clothes: "#9c27b0", type: "short" },
-            { name: "Masc1", hair: "#f1c40f", iris: "#3498db", clothes: "#34495e", type: "boy1" },
-            { name: "Masc2", hair: "#2d3436", iris: "#2ecc71", clothes: "#16a085", type: "boy2" }
+            { name: "Fem1", hair: "#1a1a1a", iris: "#4e342e", clothes: "#ff80ab" },
+            { name: "Fem2", hair: "#5d4037", iris: "#2980b9", clothes: "#9c27b0" },
+            { name: "Masc1", hair: "#f1c40f", iris: "#3498db", clothes: "#34495e" },
+            { name: "Masc2", hair: "#2d3436", iris: "#2ecc71", clothes: "#16a085" }
         ];
 
-        // ... Mantenemos las 60 preguntas originales corregidas ...
         const originalDatabase = [
             { q: "Let's go to the zoo tomorrow!", options: ["It is closed.", "How many?", "Nice monkey!"], correct: 0 },
             { q: "May I have my bill?", options: ["Not cool.", "A hot drink?", "Sure!"], correct: 2 },
@@ -260,6 +221,7 @@
         let isProcessing = false;
         let startTime = null;
         let timerInterval = null;
+        let audioCtx = null;
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -267,6 +229,22 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
+        }
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playTone(freq, type, duration) {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
 
         function startTimer() {
@@ -284,13 +262,17 @@
             isProcessing = false;
             const data = database[currentIndex];
             
-            // --- ACTUALIZAR PERSONAJE CSS ---
             const char = characters[Math.floor(Math.random() * characters.length)];
-            const hair = document.getElementById('hair-main');
-            hair.style.backgroundColor = char.hair;
+            document.getElementById('hair-main').style.backgroundColor = char.hair;
             document.getElementById('iris-l').style.setProperty('--iris-color', char.iris);
             document.getElementById('iris-r').style.setProperty('--iris-color', char.iris);
             document.getElementById('clothes-main').style.backgroundColor = char.clothes;
+
+            // RESET EXPRESIONES
+            document.getElementById('eye-l-box').style.height = '16px';
+            document.getElementById('eye-r-box').style.height = '16px';
+            document.getElementById('mouth-style').style.height = '2px';
+            document.getElementById('mouth-style').style.borderRadius = '10px';
 
             document.getElementById('question-text').innerText = data.q;
             document.getElementById('counter-text').innerText = `${currentIndex + 1}/${database.length}`;
@@ -313,21 +295,49 @@
             if (isProcessing) return;
             isProcessing = true;
             startTimer();
+            initAudio();
             const correctIndex = database[currentIndex].correct;
             const buttons = document.querySelectorAll('.btn-app');
             buttons.forEach(b => b.classList.add('disabled'));
+
             if(selectedIndex === correctIndex) {
                 btn.classList.add('correct');
                 scoreWins++;
                 document.getElementById('wins').innerText = scoreWins;
+                
+                // EXPRESIÓN FELIZ
+                document.getElementById('eye-l-box').style.height = '6px';
+                document.getElementById('eye-r-box').style.height = '6px';
+                document.getElementById('mouth-style').style.height = '10px';
+                document.getElementById('mouth-style').style.borderRadius = '0 0 15px 15px';
+
+                playTone(600, 'sine', 0.15);
+                showFeedback("Melo", "#2ecc71");
                 setTimeout(nextQuestion, 1200);
             } else {
                 btn.classList.add('wrong');
                 document.getElementById(`btn-${correctIndex}`).classList.add('reveal');
                 scoreLosses++;
                 document.getElementById('losses').innerText = scoreLosses;
+                
+                // EXPRESIÓN SERIA / SORPRESA
+                document.getElementById('eye-l-box').style.height = '20px';
+                document.getElementById('eye-r-box').style.height = '20px';
+                document.getElementById('mouth-style').style.height = '2px';
+
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                playTone(150, 'square', 0.3);
+                showFeedback("Nel, pilas", "#ff7675");
                 setTimeout(nextQuestion, 2200);
             }
+        }
+
+        function showFeedback(text, color) {
+            const msg = document.getElementById('feedback-msg');
+            msg.innerText = text;
+            msg.style.display = 'block';
+            msg.style.backgroundColor = color;
+            setTimeout(() => { msg.style.display = 'none'; }, 1000);
         }
 
         function nextQuestion() {
