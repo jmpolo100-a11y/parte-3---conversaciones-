@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Simulator Pro - Contrast Plus</title>
+    <title>English Simulator - Ghibli Edition</title>
     <style>
         :root {
-            --bg-color: #ffeb3b;
-            --header-bg: #ececf1; /* Gris un poco más oscuro para mayor contraste */
+            /* MANTENEMOS EL FONDO AMARILLO SÓLIDO ORIGINAL */
+            --bg-color: #ffeb3b; 
             --panel-bg: #ffffff;
             --text-main: #2d3436;
             --correct-color: #2ecc71;
@@ -15,6 +15,10 @@
             --info-color: #0984e3;
             --shadow: 0 10px 20px rgba(0,0,0,0.1);
             --main-font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* PALETA DE PIEL GHIBLI (Suave y cálida) */
+            --skin-light: #fbe9e7;
+            --skin-blush: #ffcdd2;
         }
 
         body {
@@ -26,50 +30,87 @@
             overflow-x: hidden;
         }
 
-        /* --- HEADER CON CONTRASTE REFORZADO --- */
+        /* --- HEADER (Como estaba en el Punto de Control) --- */
         .header {
-            display: flex; flex-direction: column; background: var(--header-bg); 
+            display: flex; flex-direction: column; background: var(--panel-bg); 
             position: sticky; top: 0; z-index: 100; padding: 15px 20px;
             border-radius: 0 0 25px 25px; box-shadow: var(--shadow);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        
-        #timer-display { font-weight: 800; background: #dfe6e9; color: #2d3436; padding: 5px 15px; border-radius: 50px; font-size: 0.9rem; border: 1px solid rgba(0,0,0,0.1); }
-        #counter-text { font-weight: 700; color: #57606f; }
-
+        #timer-display { font-weight: 800; background: #dfe6e9; color: #2d3436; padding: 5px 15px; border-radius: 50px; font-size: 0.9rem; }
+        #counter-text { font-weight: 700; color: #636e72; }
         .stats-bar { display: flex; gap: 15px; margin-top: 10px; font-weight: 800; font-size: 0.9rem; }
-
-        .progress-container { width: 100%; height: 8px; background: #d1d8e0; margin-top: 12px; border-radius: 10px; overflow: hidden; }
-        .progress-bar { height: 100%; width: 0%; background: var(--info-color); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .progress-container { width: 100%; height: 8px; background: #f1f2f6; margin-top: 12px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--info-color); transition: 0.4s ease; }
 
         /* --- SIDEBAR --- */
         .sidebar { position: fixed; left: -280px; top: 0; width: 260px; height: 100%; background: #fff; z-index: 1000; transition: 0.4s ease; padding: 30px 20px; box-sizing: border-box; border-radius: 0 30px 30px 0; display: flex; flex-direction: column; }
         .sidebar.active { left: 0; }
         #menu-list { flex-grow: 1; overflow-y: auto; padding-right: 5px; -webkit-overflow-scrolling: touch; }
-        #menu-list::-webkit-scrollbar { width: 4px; }
-        #menu-list::-webkit-scrollbar-thumb { background: #dfe6e9; border-radius: 10px; }
-        .nav-item { display: block; padding: 15px; margin: 8px 0; background: #f9f9f9; border-radius: 15px; color: #2d3436; font-weight: 700; text-align: center; transition: 0.2s; cursor: pointer; }
+        .nav-item { display: block; padding: 15px; margin: 8px 0; background: #f9f9f9; border-radius: 15px; text-decoration: none; color: #2d3436; font-weight: 700; text-align: center; transition: 0.2s; cursor: pointer; }
 
-        /* --- ESCENA --- */
+        /* --- ESCENA PRINCIPAL --- */
         .phone-screen { max-width: 400px; width: 100%; display: flex; flex-direction: column; gap: 20px; padding: 20px; box-sizing: border-box; }
         .scene { display: flex; align-items: flex-end; gap: 10px; margin-top: 10px; position: relative; }
 
-        .avatar-box { position: relative; width: 100px; height: 130px; flex-shrink: 0; }
-        .a-face { position: absolute; bottom: 40px; left: 15px; width: 70px; height: 85px; background: #ffe0bd; border-radius: 35px; z-index: 5; }
-        .a-hair { position: absolute; top: -5px; left: 10px; width: 80px; height: 60px; background: #2d3436; border-radius: 40px 40px 10px 10px; z-index: 4; }
-        .a-eye { position: absolute; top: 35px; width: 10px; height: 10px; background: #2d3436; border-radius: 50%; }
-        .a-eye.left { left: 18px; } .a-eye.right { right: 18px; }
-        .a-mouth { position: absolute; bottom: 20px; left: 25px; width: 20px; height: 8px; background: #ff7675; border-radius: 0 0 10px 10px; opacity: 0.8; }
-        .a-shirt { position: absolute; bottom: 0; left: 10px; width: 80px; height: 45px; border-radius: 20px 20px 0 0; }
+        /* ============================================================
+           MUNDO AVATAR STUDIO GHIBLI (PURO CSS)
+           ============================================================ */
+        .avatar-box { position: relative; width: 120px; height: 160px; flex-shrink: 0; }
+        
+        /* --- ESTRUCTURA BASE DE LA CARA (Fileña y Linda) --- */
+        .g-face { position: absolute; bottom: 45px; left: 15px; width: 90px; height: 105px; background: var(--skin-light); border-radius: 45px 45px 60px 60px; z-index: 10; overflow: hidden; }
+        
+        /* Rubor Ghibli sutil */
+        .g-blush { position: absolute; top: 55px; width: 15px; height: 8px; background: var(--skin-blush); border-radius: 50%; filter: blur(2px); opacity: 0.8; z-index: 11; }
+        .g-blush.left { left: 15px; } .g-blush.right { right: 15px; }
+        
+        /* Nariz Ghibli (Una pequeña línea suave) */
+        .g-nose { position: absolute; top: 52px; left: 43px; width: 4px; height: 6px; border-left: 2px solid rgba(0,0,0,0.15); border-radius: 50%; transform: rotate(10deg); z-index: 12; }
 
-        .speech-bubble { position: relative; background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); flex-grow: 1; margin-bottom: 20px; }
+        /* Boca Neutral */
+        .g-mouth { position: absolute; bottom: 20px; left: 33px; width: 24px; height: 10px; border-bottom: 2px solid #57606f; border-radius: 0 0 12px 12px; z-index: 12; transition: 0.2s; }
+
+        /* --- OJOS GHIBLI PROFESIONALES (Máximo Detalle) --- */
+        .g-eye { position: absolute; top: 38px; width: 22px; height: 26px; background: #fff; border-radius: 50% 50% 45% 45%; border: 1.5px solid #2d3436; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 13; transition: 0.2s; }
+        .g-eye.left { left: 15px; } .g-eye.right { right: 15px; }
+        
+        /* Iris y Pupila Integrada */
+        .g-pupil { width: 14px; height: 20px; background: #333; border-radius: 50%; position: relative; }
+        /* Brillo de luz Ghibli */
+        .g-pupil::after { content: ''; position: absolute; width: 5px; height: 7px; background: #fff; border-radius: 50%; top: 3px; left: 3px; filter: blur(0.5px); }
+        /* Reflejo inferior sutil */
+        .g-pupil::before { content: ''; position: absolute; width: 6px; height: 4px; background: rgba(255,255,255,0.3); border-radius: 50%; bottom: 3px; left: 4px; }
+
+        /* Cejas sutiles */
+        .g-brow { position: absolute; top: 30px; width: 18px; height: 2px; background: #57606f; border-radius: 2px; z-index: 14; }
+        .g-brow.left { left: 17px; transform: rotate(-10deg); }
+        .g-brow.right { right: 17px; transform: rotate(10deg); }
+
+        /* --- LENTES REDONDOS (Para Femenino 2) --- */
+        .g-glasses { position: absolute; top: 32px; left: 5px; width: 100px; height: 40px; z-index: 20; display: none; /* Se activa por JS */ }
+        .g-glasses-lens { position: absolute; width: 32px; height: 32px; border: 2px solid #b2bec3; border-radius: 50%; background: rgba(116, 185, 255, 0.1); box-shadow: inset 0 0 5px rgba(255,255,255,0.5); }
+        .g-glasses-lens.left { left: 10px; } .g-glasses-lens.right { right: 10px; }
+        .g-glasses-bridge { position: absolute; top: 15px; left: 42px; width: 16px; height: 4px; border-top: 2px solid #b2bec3; border-radius: 50%; }
+
+        /* --- ESTRUCTURA DE ROPA GHIBLI --- */
+        .g-shirt { position: absolute; bottom: 0; left: 10px; width: 100px; height: 60px; border-radius: 25px 25px 0 0; z-index: 5; overflow: hidden; }
+        .g-shirt-collar { position: absolute; top: -5px; left: 30px; width: 40px; height: 20px; background: #fff; border-radius: 50%; border: 1px solid #dfe6e9; }
+
+        /* --- BURBUJA DE DIÁLOGO (Tipo App Moderna como Punto Control) --- */
+        .speech-bubble { position: relative; background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); flex-grow: 1; margin-bottom: 20px; z-index: 1; }
         .speech-bubble::after { content: ''; position: absolute; left: -10px; bottom: 20px; border-width: 10px 10px 10px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
         .speech-bubble p { margin: 0; font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
 
+        /* ============================================================
+           FIN MUNDO AVATAR
+           ============================================================ */
+
+        /* --- BOTONES MODERNOS --- */
         .options-area { display: flex; flex-direction: column; gap: 15px; }
         .btn-app { background: #fff; border: none; border-radius: 20px; padding: 20px; font-weight: 700; font-size: 1rem; color: var(--text-main); box-shadow: var(--shadow); transition: 0.2s; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         
+        /* ANIMACIONES */
         .correct { background-color: var(--correct-color) !important; color: #fff !important; animation: pop 0.4s ease; }
         .wrong { background-color: var(--wrong-color) !important; color: #fff !important; animation: shake 0.4s ease; }
         .reveal { background-color: var(--info-color) !important; color: #fff !important; }
@@ -77,9 +118,12 @@
         @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
+        /* RESULTADOS */
         #result-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(45, 52, 54, 0.95); z-index: 2000; display: none; align-items: center; justify-content: center; }
         .result-card { background: #fff; padding: 40px 30px; border-radius: 35px; max-width: 320px; width: 90%; text-align: center; }
-        .restart-btn { margin-top: 25px; background: var(--bg-color); border: none; padding: 18px; border-radius: 20px; font-weight: 800; cursor: pointer; width: 100%; }
+        .restart-btn { margin-top: 25px; background: var(--info-color); color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 800; cursor: pointer; width: 100%; font-size: 1rem; }
+
+        #feedback-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 50px; font-weight: 800; z-index: 2000; display: none; box-shadow: var(--shadow); color: white; }
     </style>
 </head>
 <body>
@@ -89,12 +133,12 @@
             <div id="result-emoji" style="font-size: 60px;">🏆</div>
             <h2 style="margin: 15px 0;">Simulacro Completo</h2>
             <p style="font-size: 1.5rem; font-weight: 900;">Puntaje: <span id="final-score">0/0</span></p>
-            <p id="final-percent" style="font-weight: 800; color: var(--info-color); margin-bottom: 20px;">0%</p>
+            <p id="final-percent" style="font-weight: 800; color: var(--info-color); margin-bottom: 20px;">0% de efectividad</p>
             <div style="background: #f1f2f6; padding: 15px; border-radius: 20px;">
                 <p id="result-time" style="margin: 0; font-weight: 700;">Tiempo: 00:00</p>
                 <p id="result-msg" style="margin: 5px 0 0 0; font-style: italic; font-size: 0.9rem;"></p>
             </div>
-            <button class="restart-btn" onclick="location.reload()">REINTENTAR</button>
+            <button class="restart-btn" onclick="location.reload()">REPETIR SIMULACRO</button>
         </div>
     </div>
 
@@ -103,6 +147,8 @@
         <div id="menu-list"></div>
     </div>
     <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999;" onclick="toggleMenu()"></div>
+
+    <div id="feedback-msg"></div>
 
     <div style="width: 100%; max-width: 420px; min-height: 100vh;">
         <div class="header">
@@ -120,15 +166,37 @@
 
         <div class="phone-screen">
             <div class="scene">
-                <div class="avatar-box">
-                    <div class="a-hair" id="h-color"></div>
-                    <div class="a-face">
-                        <div class="a-eye left" id="e-l"></div>
-                        <div class="a-eye right" id="e-r"></div>
-                        <div class="a-mouth" id="m-mouth"></div>
+                <div class="avatar-box" id="avatar-render">
+                    <div id="g-hair-container"></div>
+                    
+                    <div class="g-shirt" id="g-shirt-style">
+                        <div class="g-shirt-collar" id="g-collar-style"></div>
                     </div>
-                    <div class="a-shirt" id="s-color"></div>
+                    
+                    <div class="g-face">
+                        <div class="g-blush left"></div>
+                        <div class="g-blush right"></div>
+                        <div class="g-nose"></div>
+                        <div class="g-mouth" id="g-mouth"></div>
+                        
+                        <div class="g-brow left" id="g-brow-l"></div>
+                        <div class="g-brow right" id="g-brow-r"></div>
+                        
+                        <div class="g-eye left">
+                            <div class="g-pupil" id="g-iris-l"></div>
+                        </div>
+                        <div class="g-eye right">
+                            <div class="g-pupil" id="g-iris-r"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="g-glasses" id="g-glasses">
+                        <div class="g-glasses-lens left"></div>
+                        <div class="g-glasses-lens right"></div>
+                        <div class="g-glasses-bridge"></div>
+                    </div>
                 </div>
+                
                 <div class="speech-bubble">
                     <p id="question-text">Preparando...</p>
                 </div>
@@ -138,67 +206,68 @@
     </div>
 
     <script>
+        // ... Base de datos idéntica al Punto de Control ...
         const originalDatabase = [
-            { q: "Let's go to the zoo tomorrow!", options: ["It is closed.", "How many?", "Nice monkey!"], correct: 0, hair: "#2d3436", shirt: "#0984e3" },
-            { q: "May I have my bill?", options: ["Not cool.", "A hot drink?", "Sure!"], correct: 2, hair: "#d63031", shirt: "#fd79a8" },
-            { q: "Why is she working at the city center?", options: ["Fine!", "Come on!", "No idea!"], correct: 2, hair: "#636e72", shirt: "#e67e22" },
-            { q: "Can you hold the camera?", options: ["That's quick!", "Of course.", "May I keep this?"], correct: 1, hair: "#f1c40f", shirt: "#9b59b6" },
-            { q: "Honey, I invited my parents to the party.", options: ["Be careful!", "That's great!", "As soon as possible!"], correct: 1, hair: "#2d3436", shirt: "#00b894" },
-            { q: "Was it a wonderful journey?", options: ["You're lucky!", "Very kind of you!", "Just amazing!"], correct: 2, hair: "#2d3436", shirt: "#00cec9" },
-            { q: "Hey Mark! You should visit us next November.", options: ["How often?", "I'd love to!", "Let's look for it."], correct: 1, hair: "#2d3436", shirt: "#6c5ce7" },
-            { q: "Anna missed the train.", options: ["That's terrible!", "Never again.", "How long is it?"], correct: 0, hair: "#e17055", shirt: "#fab1a0" },
-            { q: "Have you got a dress I can wear?", options: ["That's fine!", "Sure!", "Enjoy!"], correct: 1, hair: "#2d3436", shirt: "#0984e3" },
-            { q: "We couldn't swim in the pool yesterday.", options: ["Be careful!", "That's exciting!", "What happened?"], correct: 2, hair: "#fd79a8", shirt: "#e84393" },
-            { q: "Where did they buy their new car?", options: ["I don't know.", "You are right.", "It's bigger."], correct: 0, hair: "#2d3436", shirt: "#00cec9" },
-            { q: "I'm going to the art exhibition soon.", options: ["By the way.", "How long ago?", "How interesting!"], correct: 2, hair: "#fdcb6e", shirt: "#e17055" },
-            { q: "We haven't discussed our tour plans yet.", options: ["You poor thing.", "Let's do it now.", "As late as possible."], correct: 1, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "Have you got any spare change?", options: ["Let me check", "I've already changed it", "I lost my spare"], correct: 0, hair: "#2d3436", shirt: "#00b894" },
-            { q: "Until what time does the tube work?", options: ["It goes until summer time", "The last train has already passed", "There's not enough time to work"], correct: 0, hair: "#2d3436", shirt: "#636e72" },
-            { q: "Did he give you the 10 quid I left you?", options: ["He left you there yesterday", "He doesn't like to give anything", "What's that money for?"], correct: 2, hair: "#2d3436", shirt: "#ff7675" },
-            { q: "It's been a lovely supper, ________?", options: ["hasn't it", "it is", "it has"], correct: 0, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "Excuse me! Can you tell me where the loo is?", options: ["It's near the chemist", "It's behind the counter", "It's right there"], correct: 2, hair: "#2d3436", shirt: "#a29bfe" },
-            { q: "Who's Patricia?", options: ["She's fine.", "She's my friend.", "She's Spanish."], correct: 1, hair: "#2d3436", shirt: "#fdcb6e" },
-            { q: "Could you telephone me this evening?", options: ["I will if I can.", "I'll tell him for you.", "If I'm not there, speak to John."], correct: 0, hair: "#2d3436", shirt: "#ffeaa7" },
-            { q: "Have you turned off the computer?", options: ["I don't want it.", "It's on the left.", "I'm still using it."], correct: 2, hair: "#2d3436", shirt: "#fab1a0" },
-            { q: "When do you finish your class?", options: ["Yesterday.", "At six thirty.", "Two hours ago."], correct: 1, hair: "#2d3436", shirt: "#0984e3" },
-            { q: "I think Jane's a very good teacher.", options: ["Who is it?", "How far?", "Do you?"], correct: 2, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "The temperature is below zero here.", options: ["Let's go inside.", "Take off your coat.", "It's downstairs."], correct: 0, hair: "#2d3436", shirt: "#74b9ff" },
-            { q: "I couldn't finish my homework, Lily!", options: ["Very often!", "That's terrible!", "Wait for it!"], correct: 1, hair: "#2d3436", shirt: "#e17055" },
-            { q: "I don't like meatballs.", options: ["Have some chicken.", "It's in the kitchen.", "That's a lot."], correct: 0, hair: "#2d3436", shirt: "#00b894" },
-            { q: "Would you like an apple?", options: ["You're right.", "Yes, please.", "So do I."], correct: 1, hair: "#2d3436", shirt: "#d63031" },
-            { q: "I think Charlie's is the best café in town!", options: ["How much is it?", "Was it wrong?", "Is it near?"], correct: 2, hair: "#2d3436", shirt: "#a29bfe" },
-            { q: "I met my new neighbor yesterday. She's a Brazilian singer.", options: ["Welcome!", "Awesome!", "Surprise!"], correct: 1, hair: "#2d3436", shirt: "#e67e22" },
-            { q: "Are you going to the gym tonight?", options: ["Maybe tomorrow.", "Not much.", "Twice a month."], correct: 0, hair: "#2d3436", shirt: "#0984e3" },
-            { q: "How long will the journey take?", options: ["Over two hours.", "At midnight.", "I won't be late."], correct: 0, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "May I borrow your bracelet, please?", options: ["A little bit.", "In cash.", "Sure."], correct: 2, hair: "#2d3436", shirt: "#fdcb6e" },
-            { q: "Oh, dear! I forgot how to use this cell phone.", options: ["It's repaired.", "Let me help you.", "Be prepared."], correct: 1, hair: "#2d3436", shirt: "#74b9ff" },
-            { q: "I can clean the house for you today.", options: ["That's nice!", "They're mine.", "How many?"], correct: 0, hair: "#2d3436", shirt: "#00b894" },
-            { q: "Shall we cook something? I'm hungry.", options: ["How often?", "I brought one!", "What about chicken?"], correct: 2, hair: "#2d3436", shirt: "#fab1a0" },
-            { q: "Let's go to the park and play tennis!", options: ["Answer!", "Again?", "Bye."], correct: 1, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "I'm afraid I have to buy a better laptop.", options: ["Not often.", "That's brilliant!", "What's wrong?"], correct: 2, hair: "#2d3436", shirt: "#d63031" },
-            { q: "Have you joined the theater club yet?", options: ["A month ago.", "Yes, I agree.", "At the moment."], correct: 0, hair: "#2d3436", shirt: "#e84393" },
-            { q: "Make sure that you keep the medicine in the cabinet.", options: ["It's kind.", "See you soon.", "Of course!"], correct: 2, hair: "#2d3436", shirt: "#e67e22" },
-            { q: "So, who is going to repair the engine?", options: ["I'll do it myself.", "I'll go straight.", "I'll look for it."], correct: 0, hair: "#2d3436", shirt: "#74b9ff" },
-            { q: "I can go to the restaurant and get some food.", options: ["Whose rice?", "That's really nice!", "Look at me."], correct: 1, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "I must go home.", options: ["Who is wrong?", "That's sad!", "It's brilliant."], correct: 1, hair: "#2d3436", shirt: "#a29bfe" },
-            { q: "I'll give you your earrings back tomorrow.", options: ["It's a special set.", "Sure, no problem.", "Wonderful jewelry."], correct: 1, hair: "#2d3436", shirt: "#fdcb6e" },
-            { q: "Good to have you back in the school again!", options: ["Yes, that's funny.", "Oh! How silly.", "Thanks, I'm happy."], correct: 2, hair: "#2d3436", shirt: "#e84393" },
-            { q: "Son, stop it! You could hurt someone!", options: ["Help me, mom!", "That's sweet!", "All right!"], correct: 2, hair: "#2d3436", shirt: "#e17055" },
-            { q: "Do you want to make an appointment with the designer?", options: ["Just before?", "Of course!", "Last February."], correct: 1, hair: "#2d3436", shirt: "#6c5ce7" },
-            { q: "How did you get that dictionary?", options: ["I borrowed it.", "Do you have a dollar?", "A minute ago."], correct: 0, hair: "#2d3436", shirt: "#00b894" },
-            { q: "We got free tickets. These two are for you.", options: ["Thank you.", "I'm worried.", "That's the best one."], correct: 0, hair: "#2d3436", shirt: "#00cec9" },
-            { q: "What time do you usually start work on weekends?", options: ["At noon.", "Only once.", "It's tomorrow."], correct: 0, hair: "#2d3436", shirt: "#d63031" },
-            { q: "Look at that modern laptop. It's not expensive!", options: ["Anything else?", "It's the winner!", "It's on sale."], correct: 2, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "Hey, are you studying Spanish now?", options: ["I'm fine.", "That's right.", "It's ok."], correct: 1, hair: "#2d3436", shirt: "#fd79a8" },
-            { q: "Hello. Can you please help me? I've lost my suitcase!", options: ["It's too early.", "Hey! Be careful.", "Can you describe it?"], correct: 2, hair: "#2d3436", shirt: "#00b894" },
-            { q: "Are you here for the music class?", options: ["See you!", "I'm not from here.", "Yes, I'm new."], correct: 2, hair: "#2d3436", shirt: "#fdcb6e" },
-            { q: "Let's go for a ride, it's a sunny day!", options: ["Are we around?", "Nothing more.", "It's the best idea!"], correct: 2, hair: "#2d3436", shirt: "#55efc4" },
-            { q: "Why didn't you put your new coat on yesterday?", options: ["I liked jeans.", "Let's dress up.", "It was too warm."], correct: 2, hair: "#2d3436", shirt: "#ff7675" },
-            { q: "This movie is about a really big family.", options: ["Is it good?", "Is that a lot?", "Is your mom OK?"], correct: 0, hair: "#2d3436", shirt: "#0984e3" },
-            { q: "Why are they hiding?", options: ["Come on!", "I've got no idea.", "Is it near?"], correct: 1, hair: "#2d3436", shirt: "#a29bfe" },
-            { q: "Everyone bought tickets for the rock concert.", options: ["Is it on Saturday?", "There was noise.", "It is fair!"], correct: 0, hair: "#2d3436", shirt: "#d63031" },
-            { q: "It seems I'll be the new boss of the business department.", options: ["Excuse me!", "It's ready!", "Congratulations!"], correct: 2, hair: "#2d3436", shirt: "#6c5ce7" },
-            { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, hair: "#2d3436", shirt: "#74b9ff" }
+            { q: "Let's go to the zoo tomorrow!", options: ["It is closed.", "How many?", "Nice monkey!"], correct: 0 },
+            { q: "May I have my bill?", options: ["Not cool.", "A hot drink?", "Sure!"], correct: 2 },
+            { q: "Why is she working at the city center?", options: ["Fine!", "Come on!", "No idea!"], correct: 2 },
+            { q: "Can you hold the camera?", options: ["That's quick!", "Of course.", "May I keep this?"], correct: 1 },
+            { q: "Honey, I invited my parents to the party.", options: ["Be careful!", "That's great!", "As soon as possible!"], correct: 1 },
+            { q: "Was it a wonderful journey?", options: ["You're lucky!", "Very kind of you!", "Just amazing!"], correct: 2 },
+            { q: "Hey Mark! You should visit us next November.", options: ["How often?", "I'd love to!", "Let's look for it."], correct: 1 },
+            { q: "Anna missed the train.", options: ["That's terrible!", "Never again.", "How long is it?"], correct: 0 },
+            { q: "Have you got a dress I can wear?", options: ["That's fine!", "Sure!", "Enjoy!"], correct: 1 },
+            { q: "We couldn't swim in the pool yesterday.", options: ["Be careful!", "That's exciting!", "What happened?"], correct: 2 },
+            { q: "Where did they buy their new car?", options: ["I don't know.", "You are right.", "It's bigger."], correct: 0 },
+            { q: "I'm going to the art exhibition soon.", options: ["By the way.", "How long ago?", "How interesting!"], correct: 2 },
+            { q: "We haven't discussed our tour plans yet.", options: ["You poor thing.", "Let's do it now.", "As late as possible."], correct: 1 },
+            { q: "Have you got any spare change?", options: ["Let me check", "I've already changed it", "I lost my spare"], correct: 0 },
+            { q: "Until what time does the tube work?", options: ["It goes until summer time", "The last train has already passed", "There's not enough time to work"], correct: 0 },
+            { q: "Did he give you the 10 quid I left you?", options: ["He left you there yesterday", "He doesn't like to give anything", "What's that money for?"], correct: 2 },
+            { q: "It's been a lovely supper, ________?", options: ["hasn't it", "it is", "it has"], correct: 0 },
+            { q: "Excuse me! Can you tell me where the loo is?", options: ["It's near the chemist", "It's behind the counter", "It's right there"], correct: 2 },
+            { q: "Who's Patricia?", options: ["She's fine.", "She's my friend.", "She's Spanish."], correct: 1 },
+            { q: "Could you telephone me this evening?", options: ["I will if I can.", "I'll tell him for you.", "If I'm not there, speak to John."], correct: 0 },
+            { q: "Have you turned off the computer?", options: ["I don't want it.", "It's on the left.", "I'm still using it."], correct: 2 },
+            { q: "When do you finish your class?", options: ["Yesterday.", "At six thirty.", "Two hours ago."], correct: 1 },
+            { q: "I think Jane's a very good teacher.", options: ["Who is it?", "How far?", "Do you?"], correct: 2 },
+            { q: "The temperature is below zero here.", options: ["Let's go inside.", "Take off your coat.", "It's downstairs."], correct: 0 },
+            { q: "I couldn't finish my homework, Lily!", options: ["Very often!", "That's terrible!", "Wait for it!"], correct: 1 },
+            { q: "I don't like meatballs.", options: ["Have some chicken.", "It's in the kitchen.", "That's a lot."], correct: 0 },
+            { q: "Would you like an apple?", options: ["You're right.", "Yes, please.", "So do I."], correct: 1 },
+            { q: "I think Charlie's is the best café in town!", options: ["How much is it?", "Was it wrong?", "Is it near?"], correct: 2 },
+            { q: "I met my new neighbor yesterday. She's a Brazilian singer.", options: ["Welcome!", "Awesome!", "Surprise!"], correct: 1 },
+            { q: "Are you going to the gym tonight?", options: ["Maybe tomorrow.", "Not much.", "Twice a month."], correct: 0 },
+            { q: "How long will the journey take?", options: ["Over two hours.", "At midnight.", "I won't be late."], correct: 0 },
+            { q: "May I borrow your bracelet, please?", options: ["A little bit.", "In cash.", "Sure."], correct: 2 },
+            { q: "Oh, dear! I forgot how to use this cell phone.", options: ["It's repaired.", "Let me help you.", "Be prepared."], correct: 1 },
+            { q: "I can clean the house for you today.", options: ["That's nice!", "They're mine.", "How many?"], correct: 0 },
+            { q: "Shall we cook something? I'm hungry.", options: ["How often?", "I brought one!", "What about chicken?"], correct: 2 },
+            { q: "Let's go to the park and play tennis!", options: ["Answer!", "Again?", "Bye."], correct: 1 },
+            { q: "I'm afraid I have to buy a better laptop.", options: ["Not often.", "That's brilliant!", "What's wrong?"], correct: 2 },
+            { q: "Have you joined the theater club yet?", options: ["A month ago.", "Yes, I agree.", "At the moment."], correct: 0 },
+            { q: "Make sure that you keep the medicine in the cabinet.", options: ["It's kind.", "See you soon.", "Of course!"], correct: 2 },
+            { q: "So, who is going to repair the engine?", options: ["I'll do it myself.", "I'll go straight.", "I'll look for it."], correct: 0 },
+            { q: "I can go to the restaurant and get some food.", options: ["Whose rice?", "That's really nice!", "Look at me."], correct: 1 },
+            { q: "I must go home.", options: ["Who is wrong?", "That's sad!", "It's brilliant."], correct: 1 },
+            { q: "I'll give you your earrings back tomorrow.", options: ["It's a special set.", "Sure, no problem.", "Wonderful jewelry."], correct: 1 },
+            { q: "Good to have you back in the school again!", options: ["Yes, that's funny.", "Oh! How silly.", "Thanks, I'm happy."], correct: 2 },
+            { q: "Son, stop it! You could hurt someone!", options: ["Help me, mom!", "That's sweet!", "All right!"], correct: 2 },
+            { q: "Do you want to make an appointment with the designer?", options: ["Just before?", "Of course!", "Last February."], correct: 1 },
+            { q: "How did you get that dictionary?", options: ["I borrowed it.", "Do you have a dollar?", "A minute ago."], correct: 0 },
+            { q: "We got free tickets. These two are for you.", options: ["Thank you.", "I'm worried.", "That's the best one."], correct: 0 },
+            { q: "What time do you usually start work on weekends?", options: ["At noon.", "Only once.", "It's tomorrow."], correct: 0 },
+            { q: "Look at that modern laptop. It's not expensive!", options: ["Anything else?", "It's the winner!", "It's on sale."], correct: 2 },
+            { q: "Hey, are you studying Spanish now?", options: ["I'm fine.", "That's right.", "It's ok."], correct: 1 },
+            { q: "Hello. Can you please help me? I've lost my suitcase!", options: ["It's too early.", "Hey! Be careful.", "Can you describe it?"], correct: 2 },
+            { q: "Are you here for the music class?", options: ["See you!", "I'm not from here.", "Yes, I'm new."], correct: 2 },
+            { q: "Let's go for a ride, it's a sunny day!", options: ["Are we around?", "Nothing more.", "It's the best idea!"], correct: 2 },
+            { q: "Why didn't you put your new coat on yesterday?", options: ["I liked jeans.", "Let's dress up.", "It was too warm."], correct: 2 },
+            { q: "This movie is about a really big family.", options: ["Is it good?", "Is that a lot?", "Is your mom OK?"], correct: 0 },
+            { q: "Why are they hiding?", options: ["Come on!", "I've got no idea.", "Is it near?"], correct: 1 },
+            { q: "Everyone bought tickets for the rock concert.", options: ["Is it on Saturday?", "There was noise.", "It is fair!"], correct: 0 },
+            { q: "It seems I'll be the new boss of the business department.", options: ["Excuse me!", "It's ready!", "Congratulations!"], correct: 2 },
+            { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1 }
         ];
 
         let database = [];
@@ -209,6 +278,103 @@
         let startTime = null;
         let timerInterval = null;
         let audioCtx = null;
+
+        // ============================================================
+        // MOTOR DE RENDERIZADO DE AVATARES STUDIO GHIBLI (JS/CSS)
+        // ============================================================
+        const ghibliCast = [
+            // 👩🏻 Femenino 1: Cabello largo oscuro, linda
+            {
+                gender: "woman",
+                iris: "#6f4e37", // Café cálido
+                shirt: "#81d4fa", // Azul cielo
+                collar: "none",
+                glasses: "none",
+                // Cabello largo CSS
+                hairCSS: `
+                    width: 110px; height: 120px; background: #1a1a1a;
+                    position: absolute; top: -10px; left: 5px;
+                    border-radius: 50px 50px 20px 20px; z-index: 2;
+                `,
+                extraHair: `<div style="position:absolute; width: 30px; height: 60px; background:#1a1a1a; top:40px; left:0px; border-radius:20px; z-index:1;"></div>
+                            <div style="position:absolute; width: 30px; height: 60px; background:#1a1a1a; top:40px; right:0px; border-radius:20px; z-index:1;"></div>`
+            },
+            // 👩🏼 Femenino 2: Cabello corto castaño, lentes redondos
+            {
+                gender: "woman",
+                iris: "#a67c52", // Miel
+                shirt: "#673ab7", // Violeta oscuro
+                collar: "none",
+                glasses: "block", // ACTIVA LENTES
+                hairCSS: `
+                    width: 100px; height: 80px; background: #8d6e63;
+                    position: absolute; top: 0px; left: 10px;
+                    border-radius: 40px 40px 10px 10px; z-index: 2;
+                `,
+                extraHair: `<div style="position:absolute; width: 30px; height: 40px; background:#8d6e63; top:30px; left:10px; border-radius:0 0 15px 15px; z-index:3; transform:rotate(-15deg);"></div>`
+            },
+            // 👦🏼 Masculino 1: Cabello corto rubio
+            {
+                gender: "man",
+                iris: "#4169e1", // Azul zafiro
+                shirt: "#fff", // Camisa blanca
+                collar: "block",
+                glasses: "none",
+                hairCSS: `
+                    width: 95px; height: 70px; background: #f7e1a0;
+                    position: absolute; top: 0px; left: 12px;
+                    border-radius: 35px 35px 15px 15px; z-index: 2;
+                `,
+                extraHair: `<div style="position:absolute; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid #f7e1a0; top:-10px; left:40px; z-index:1; transform:rotate(-10deg);"></div>`
+            },
+            // 👦🏻 Masculino 2: Cabello un poco más largo, oscuro
+            {
+                gender: "man",
+                iris: "#2e7d32", // Verde esmeralda
+                shirt: "#f5f5f5", // Túnica blanca detalles azul
+                collar: "none",
+                glasses: "none",
+                hairCSS: `
+                    width: 105px; height: 90px; background: #2d3436;
+                    position: absolute; top: -5px; left: 7px;
+                    border-radius: 40px 40px 10px 10px; z-index: 2;
+                `,
+                extraHair: `<div style="position:absolute; width: 25px; height: 50px; background:#2d3436; top:35px; left:5px; border-radius:10px; z-index:3;"></div>
+                            <div style="position:absolute; width: 25px; height: 50px; background:#2d3436; top:35px; right:5px; border-radius:10px; z-index:3;"></div>
+                            <div style="position:absolute; width: 40px; height: 10px; background:#0984e3; bottom:5px; left:30px; z-index:6; border-radius:5px;"></div>` // Detalle azul túnica
+            }
+        ];
+
+        function renderGhibliAvatar() {
+            // Elegir uno de los 4 avatares al azar
+            const avatar = ghibliCast[Math.floor(Math.random() * ghibliCast.length)];
+            
+            // Renderizar Cabello
+            const hairContainer = document.getElementById('g-hair-container');
+            hairContainer.innerHTML = `<div style="${avatar.hairCSS}"></div>${avatar.extraHair}`;
+            
+            // Configurar Facciones Base
+            document.getElementById('g-iris-l').style.backgroundColor = avatar.iris;
+            document.getElementById('g-iris-r').style.backgroundColor = avatar.iris;
+            document.getElementById('g-shirt-style').style.backgroundColor = avatar.shirt;
+            
+            // Detalles específicos
+            document.getElementById('g-collar-style').style.display = avatar.collar;
+            document.getElementById('g-glasses').style.display = avatar.glasses;
+            
+            // Ajustar cejas según género para estética Ghibli
+            if(avatar.gender === "man") {
+                document.getElementById('g-brow-l').style.width = '22px';
+                document.getElementById('g-brow-r').style.width = '22px';
+            } else {
+                document.getElementById('g-brow-l').style.width = '18px';
+                document.getElementById('g-brow-r').style.width = '18px';
+            }
+        }
+
+        // ============================================================
+        // FIN MOTOR AVATAR
+        // ============================================================
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -248,14 +414,23 @@
         function loadQuestion() {
             isProcessing = false;
             const data = database[currentIndex];
+            
+            // CAMBIAR AVATAR ALEATORIAMENTE EN CADA PREGUNTA
+            renderGhibliAvatar();
+
+            // Lógica normal de carga
             document.getElementById('question-text').innerText = data.q;
             document.getElementById('counter-text').innerText = `${currentIndex + 1}/${database.length}`;
             const prog = ((currentIndex) / database.length) * 100;
             document.getElementById('progress-bar').style.width = prog + "%";
-            document.getElementById('e-l').style.height = '10px';
-            document.getElementById('e-r').style.height = '10px';
-            document.getElementById('h-color').style.backgroundColor = data.hair;
-            document.getElementById('s-color').style.backgroundColor = data.shirt;
+
+            // Reset expresiones Ghibli (Ojos normales)
+            const pupils = document.querySelectorAll('.g-pupil');
+            pupils.forEach(p => {
+                p.style.height = '20px'; p.style.width = '14px'; p.style.borderRadius = '50%'; p.style.transform = 'none';
+            });
+            document.getElementById('g-mouth').style.borderBottom = '2px solid #57606f'; document.getElementById('g-mouth').style.height = '10px';
+
             const container = document.getElementById('options-container');
             container.innerHTML = '';
             data.options.forEach((opt, index) => {
@@ -273,24 +448,37 @@
             isProcessing = true;
             startTimer();
             initAudio();
+
             const correctIndex = database[currentIndex].correct;
             const buttons = document.querySelectorAll('.btn-app');
             buttons.forEach(b => b.classList.add('disabled'));
+
             if(selectedIndex === correctIndex) {
+                // --- ACIERTO GHIBLI ---
                 btn.classList.add('correct');
                 scoreWins++;
                 document.getElementById('wins').innerText = scoreWins;
-                document.getElementById('e-l').style.height = '4px';
-                document.getElementById('e-r').style.height = '4px';
+                
+                // Expresión Feliz Ghibli (Ojos ligeramente más cerrados sonriendo)
+                const pupils = document.querySelectorAll('.g-pupil');
+                pupils.forEach(p => p.style.height = '10px');
+                document.getElementById('g-mouth').style.borderBottom = '4px solid #57606f'; document.getElementById('g-mouth').style.height = '14px';
+                
                 playTone(600, 'sine', 0.15);
                 setTimeout(nextQuestion, 1200);
             } else {
+                // --- ERROR GHIBLI ---
                 btn.classList.add('wrong');
                 document.getElementById(`btn-${correctIndex}`).classList.add('reveal');
                 scoreLosses++;
                 document.getElementById('losses').innerText = scoreLosses;
-                document.getElementById('e-l').style.height = '12px';
-                document.getElementById('e-r').style.height = '12px';
+                
+                // Expresión Sorpresa/Preocupación Ghibli (Pupilas pequeñas)
+                const pupils = document.querySelectorAll('.g-pupil');
+                pupils.forEach(p => {
+                    p.style.height = '10px'; p.style.width = '10px';
+                });
+
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                 playTone(150, 'square', 0.3);
                 setTimeout(nextQuestion, 2200);
@@ -308,7 +496,7 @@
                 const percent = Math.round((scoreWins / database.length) * 100);
                 document.getElementById('final-percent').innerText = `${percent}% de efectividad`;
                 document.getElementById('result-time').innerText = "Tiempo: " + document.getElementById('timer-display').innerText;
-                document.getElementById('result-msg').innerText = percent >= 70 ? "¡Nivel avanzado! 🔥" : "¡Sigue así! 💪";
+                document.getElementById('result-msg').innerText = percent >= 70 ? "¡Nivel avanzado Ghibli! 🔥" : "¡Sigue practicando! 💪";
             }
         }
 
@@ -325,7 +513,7 @@
             database.forEach((_, i) => {
                 const item = document.createElement('div');
                 item.className = 'nav-item';
-                item.innerText = `Pregunta ${i + 1}`;
+                item.innerText = `Q${i + 1}`;
                 item.onclick = () => { currentIndex = i; loadQuestion(); toggleMenu(); };
                 list.appendChild(item);
             });
