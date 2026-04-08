@@ -56,7 +56,7 @@
             background: var(--skin-base); border-radius: 40px 40px 55px 55px; z-index: 5;
             box-shadow: inset -5px -10px 15px var(--skin-shadow), inset 5px 5px 10px rgba(255,255,255,0.5);
         }
-        .eye-real { position: absolute; top: 40px; width: 22px; height: 16px; background: #fff; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .eye-real { position: absolute; top: 40px; width: 22px; height: 16px; background: #fff; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .eye-real.left { left: 12px; } .eye-real.right { right: 12px; }
         .iris { width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle, #333 20%, var(--iris-color, #555) 70%); position: relative; }
         .hair-real { position: absolute; z-index: 6; }
@@ -242,7 +242,8 @@
             const gain = audioCtx.createGain();
             osc.type = type;
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            // VOLUMEN AUMENTADO: de 0.05 a 0.15
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
             osc.connect(gain); gain.connect(audioCtx.destination);
             osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
@@ -268,11 +269,14 @@
             document.getElementById('iris-r').style.setProperty('--iris-color', char.iris);
             document.getElementById('clothes-main').style.backgroundColor = char.clothes;
 
-            // RESET EXPRESIONES
+            // RESET EXPRESIONES (Neutral)
             document.getElementById('eye-l-box').style.height = '16px';
             document.getElementById('eye-r-box').style.height = '16px';
-            document.getElementById('mouth-style').style.height = '2px';
-            document.getElementById('mouth-style').style.borderRadius = '10px';
+            const mouth = document.getElementById('mouth-style');
+            mouth.style.height = '2px';
+            mouth.style.borderRadius = '10px';
+            mouth.style.borderBottom = 'none';
+            mouth.style.borderTop = 'none';
 
             document.getElementById('question-text').innerText = data.q;
             document.getElementById('counter-text').innerText = `${currentIndex + 1}/${database.length}`;
@@ -300,16 +304,20 @@
             const buttons = document.querySelectorAll('.btn-app');
             buttons.forEach(b => b.classList.add('disabled'));
 
+            const mouth = document.getElementById('mouth-style');
+
             if(selectedIndex === correctIndex) {
                 btn.classList.add('correct');
                 scoreWins++;
                 document.getElementById('wins').innerText = scoreWins;
                 
-                // EXPRESIÓN FELIZ
+                // EXPRESIÓN FELIZ (Sonrisa)
                 document.getElementById('eye-l-box').style.height = '6px';
                 document.getElementById('eye-r-box').style.height = '6px';
-                document.getElementById('mouth-style').style.height = '10px';
-                document.getElementById('mouth-style').style.borderRadius = '0 0 15px 15px';
+                mouth.style.height = '12px';
+                mouth.style.borderRadius = '0 0 15px 15px';
+                mouth.style.background = 'transparent';
+                mouth.style.borderBottom = '4px solid rgba(0,0,0,0.6)';
 
                 playTone(600, 'sine', 0.15);
                 showFeedback("Melo", "#2ecc71");
@@ -320,10 +328,14 @@
                 scoreLosses++;
                 document.getElementById('losses').innerText = scoreLosses;
                 
-                // EXPRESIÓN SERIA / SORPRESA
+                // EXPRESIÓN TRISTE / DECEPCIÓN (Boca curva hacia arriba)
                 document.getElementById('eye-l-box').style.height = '20px';
                 document.getElementById('eye-r-box').style.height = '20px';
-                document.getElementById('mouth-style').style.height = '2px';
+                mouth.style.height = '12px';
+                mouth.style.borderRadius = '15px 15px 0 0';
+                mouth.style.background = 'transparent';
+                mouth.style.borderTop = '4px solid rgba(0,0,0,0.6)';
+                mouth.style.borderBottom = 'none';
 
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                 playTone(150, 'square', 0.3);
