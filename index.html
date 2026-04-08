@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICFES Part 3 - Exam Mode Corrected</title>
+    <title>English Simulator Pro</title>
     <style>
         :root {
-            --comic-border: #000;
             --bg-color: #ffeb3b;
+            --panel-bg: #ffffff;
+            --text-main: #2d3436;
+            --correct-color: #2ecc71;
+            --wrong-color: #ff7675;
+            --info-color: #0984e3;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
             --main-font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -16,93 +21,124 @@
             background-color: var(--bg-color);
             margin: 0; padding: 0;
             display: flex; justify-content: center; min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
+            color: var(--text-main);
+            overflow-x: hidden;
         }
 
-        /* --- SIDEBAR --- */
-        .sidebar {
-            position: fixed; left: -260px; top: 0; width: 250px; height: 100%;
-            background: #fff; border-right: 4px solid var(--comic-border);
-            z-index: 1000; transition: 0.3s ease; padding: 20px; box-sizing: border-box;
-            display: flex; flex-direction: column;
-        }
-        .sidebar.active { left: 0; }
-        .sidebar h2 { font-weight: 900; border-bottom: 3px solid #000; margin-top: 0; padding-bottom: 10px; }
-        #menu-list { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
-        .nav-item { display: block; padding: 12px; margin: 8px 0; background: #f0f0f0; border: 3px solid var(--comic-border); text-decoration: none; color: #000; font-weight: 900; border-radius: 8px; text-align: center; }
-
-        /* --- HEADER --- */
+        /* --- HEADER MODERNO --- */
         .header {
-            display: flex; flex-direction: column; background: #fff; border-bottom: 4px solid var(--comic-border);
-            position: sticky; top: 0; z-index: 100; padding: 10px 15px;
+            display: flex; flex-direction: column; background: var(--panel-bg); 
+            position: sticky; top: 0; z-index: 100; padding: 15px 20px;
+            border-radius: 0 0 25px 25px; box-shadow: var(--shadow);
         }
         .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .stats-bar { display: flex; gap: 15px; margin-top: 5px; font-weight: 900; font-size: 0.9rem; }
-        .stat-win { color: #2e7d32; }
-        .stat-loss { color: #c62828; }
+        
+        #timer-display { font-weight: 800; background: #dfe6e9; color: #2d3436; padding: 5px 15px; border-radius: 50px; font-size: 0.9rem; }
+        #counter-text { font-weight: 700; color: #636e72; }
+
+        .stats-bar { display: flex; gap: 15px; margin-top: 10px; font-weight: 800; font-size: 0.9rem; }
+
+        .progress-container { width: 100%; height: 8px; background: #f1f2f6; margin-top: 12px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--info-color); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        /* --- SIDEBAR --- */
+        .sidebar { position: fixed; left: -280px; top: 0; width: 260px; height: 100%; background: #fff; z-index: 1000; transition: 0.4s ease; padding: 30px 20px; box-sizing: border-box; border-radius: 0 30px 30px 0; }
+        .sidebar.active { left: 0; }
+        .nav-item { display: block; padding: 15px; margin: 8px 0; background: #f9f9f9; border-radius: 15px; text-decoration: none; color: #2d3436; font-weight: 700; text-align: center; transition: 0.2s; }
+        .nav-item:active { transform: scale(0.95); background: #eee; }
 
         /* --- ESCENA --- */
-        .phone-screen { max-width: 380px; width: 100%; display: flex; flex-direction: column; gap: 15px; padding: 15px; box-sizing: border-box; }
-        .scene { display: flex; align-items: flex-start; gap: 10px; margin-top: 5px; min-height: 160px; }
-        .character-art { position: relative; width: 100px; height: 140px; flex-shrink: 0; }
-        .face { position: absolute; top: 35px; left: 15px; width: 65px; height: 80px; background: #ffdbac; border: 4px solid var(--comic-border); border-radius: 30px 30px 45px 45%; z-index: 5; }
-        .hair { position: absolute; border: 4px solid var(--comic-border); z-index: 2; }
-        .hair.man { height: 50px; width: 75px; top: 5px; left: 10px; border-radius: 40% 40% 10% 10%; }
-        .hair.woman { height: 100px; width: 85px; top: 10px; left: 5px; border-radius: 35px 35px 15px 15px; z-index: 1; }
-        .eye { position: absolute; top: 22px; width: 12px; height: 15px; background: #fff; border: 3px solid var(--comic-border); border-radius: 50%; }
-        .eye.left { left: 10px; } .eye.right { right: 10px; }
-        .pupil { position: absolute; top: 4px; left: 3px; width: 6px; height: 7px; background: #000; border-radius: 50%; }
-        .speech-bubble { position: relative; background: #fff; border: 4px solid var(--comic-border); border-radius: 18px; padding: 15px; box-shadow: 6px 6px 0 rgba(0,0,0,0.1); flex-grow: 1; }
-        .speech-bubble p { margin: 0; font-size: 1.1rem; font-weight: 800; line-height: 1.2; color: #000; }
-        .speech-bubble:after { content: ''; position: absolute; left: -15px; top: 25px; border: 10px solid transparent; border-right-color: #fff; z-index: 11; }
-
-        /* --- BOTONES --- */
-        .options-area { display: flex; flex-direction: column; gap: 12px; }
-        .comic-btn { background: #fff; border: 4px solid var(--comic-border); border-radius: 12px; padding: 18px; font-weight: 900; font-size: 1rem; color: #000; box-shadow: 4px 4px 0 var(--comic-border); transition: 0.1s; text-align: left; -webkit-tap-highlight-color: transparent; }
+        .phone-screen { max-width: 400px; width: 100%; display: flex; flex-direction: column; gap: 20px; padding: 20px; box-sizing: border-box; }
         
-        .correct { background-color: #4caf50 !important; color: white !important; }
-        .wrong { background-color: #f44336 !important; color: white !important; }
-        .reveal { background-color: #2196f3 !important; color: white !important; border-color: #0d47a1 !important; }
-        .disabled { pointer-events: none; opacity: 0.8; }
+        .scene { display: flex; align-items: flex-end; gap: 10px; margin-top: 10px; position: relative; }
 
-        #feedback-msg { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 50px; border: 4px solid #000; font-weight: 900; font-size: 1.1rem; z-index: 2000; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: none; align-items: center; justify-content: center; gap: 12px; min-width: 220px; text-align: center; }
+        /* AVATAR VECTORIAL (Minimalista) */
+        .avatar-box { position: relative; width: 100px; height: 130px; flex-shrink: 0; }
+        .a-face { position: absolute; bottom: 40px; left: 15px; width: 70px; height: 85px; background: #ffe0bd; border-radius: 35px; z-index: 5; }
+        .a-hair { position: absolute; top: -5px; left: 10px; width: 80px; height: 60px; background: #2d3436; border-radius: 40px 40px 10px 10px; z-index: 4; }
+        .a-eye { position: absolute; top: 35px; width: 10px; height: 10px; background: #2d3436; border-radius: 50%; }
+        .a-eye.left { left: 18px; } .a-eye.right { right: 18px; }
+        .a-mouth { position: absolute; bottom: 20px; left: 25px; width: 20px; height: 8px; background: #ff7675; border-radius: 0 0 10px 10px; opacity: 0.8; }
+        .a-shirt { position: absolute; bottom: 0; left: 10px; width: 80px; height: 45px; border-radius: 20px 20px 0 0; }
+
+        /* BURBUJA TIPO APP */
+        .speech-bubble { position: relative; background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); flex-grow: 1; margin-bottom: 20px; }
+        .speech-bubble::after { content: ''; position: absolute; left: -10px; bottom: 20px; border-width: 10px 10px 10px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
+        .speech-bubble p { margin: 0; font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
+
+        /* --- BOTONES MODERNOS --- */
+        .options-area { display: flex; flex-direction: column; gap: 15px; }
+        .btn-app { background: #fff; border: none; border-radius: 20px; padding: 20px; font-weight: 700; font-size: 1rem; color: var(--text-main); box-shadow: var(--shadow); transition: 0.2s; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        
+        .btn-app:active { transform: scale(0.98); }
+
+        /* ANIMACIONES DE FEEDBACK */
+        .correct { background-color: var(--correct-color) !important; color: #fff !important; animation: pop 0.4s ease; }
+        .wrong { background-color: var(--wrong-color) !important; color: #fff !important; animation: shake 0.4s ease; }
+        .reveal { background-color: var(--info-color) !important; color: #fff !important; }
+
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+        /* RESULTADOS */
+        #result-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(45, 52, 54, 0.95); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        .result-card { background: #fff; padding: 40px 30px; border-radius: 35px; max-width: 320px; width: 90%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .restart-btn { margin-top: 25px; background: var(--bg-color); border: none; padding: 18px; border-radius: 20px; font-weight: 800; cursor: pointer; width: 100%; font-size: 1rem; }
+
+        #feedback-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); padding: 15px 30px; border-radius: 50px; font-weight: 800; z-index: 2000; display: none; box-shadow: var(--shadow); color: white; }
     </style>
 </head>
 <body>
 
+    <div id="result-screen">
+        <div class="result-card">
+            <div id="result-emoji" style="font-size: 60px;">🏆</div>
+            <h2 style="margin: 15px 0; font-size: 1.8rem;">¡Simulacro Listo!</h2>
+            <p style="font-size: 1.5rem; font-weight: 900; margin-bottom: 5px;">Puntaje: <span id="final-score">0/0</span></p>
+            <p id="final-percent" style="font-weight: 800; color: var(--info-color); margin-bottom: 20px;">0% de efectividad</p>
+            <div style="background: #f1f2f6; padding: 15px; border-radius: 20px;">
+                <p id="result-time" style="margin: 0; font-weight: 700;">Tiempo: 00:00</p>
+                <p id="result-msg" style="margin: 5px 0 0 0; font-style: italic; font-size: 0.9rem;"></p>
+            </div>
+            <button class="restart-btn" onclick="location.reload()">REPETIR SIMULACRO</button>
+        </div>
+    </div>
+
     <div class="sidebar" id="sidebar">
-        <h2>PREGUNTAS</h2>
+        <h2 style="margin-bottom: 20px;">Preguntas</h2>
         <div id="menu-list"></div>
     </div>
-    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; z-index:999;" onclick="toggleMenu()"></div>
+    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:none; z-index:999;" onclick="toggleMenu()"></div>
 
     <div id="feedback-msg"></div>
 
-    <div style="width: 100%; max-width: 400px; background: var(--bg-color);">
+    <div style="width: 100%; max-width: 420px; min-height: 100vh;">
         <div class="header">
             <div class="header-top">
-                <button style="font-size: 24px; background:none; border:none; font-weight:900;" onclick="toggleMenu()">☰</button>
-                <div style="font-weight: 900;" id="counter-text">1/60</div>
+                <div style="font-size: 24px; cursor: pointer;" onclick="toggleMenu()">☰</div>
+                <div id="timer-display">00:00</div>
+                <div id="counter-text">1/60</div>
             </div>
             <div class="stats-bar">
-                <span class="stat-win">✅: <span id="wins">0</span></span>
-                <span class="stat-loss">❌: <span id="losses">0</span></span>
+                <span style="color: var(--correct-color)">✅ <span id="wins">0</span></span>
+                <span style="color: var(--wrong-color)">❌ <span id="losses">0</span></span>
             </div>
+            <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
         </div>
 
         <div class="phone-screen">
             <div class="scene">
-                <div class="character-art" id="avatar-container">
-                    <div id="hair-style" class="hair"></div>
-                    <div class="face">
-                        <div class="eye left"><div class="pupil"></div></div>
-                        <div class="eye right"><div class="pupil"></div></div>
-                        <div class="mouth" style="position: absolute; bottom: 12px; left: 18px; width: 25px; height: 8px; border-bottom: 4px solid #000; border-radius: 0 0 15px 15px;"></div>
+                <div class="avatar-box">
+                    <div class="a-hair" id="h-color"></div>
+                    <div class="a-face">
+                        <div class="a-eye left" id="e-l"></div>
+                        <div class="a-eye right" id="e-r"></div>
+                        <div class="a-mouth" id="m-mouth"></div>
                     </div>
-                    <div class="shoulders" id="shirt-style" style="position: absolute; top: 115px; left: 5px; width: 85px; height: 40px; border: 4px solid #000; border-radius: 15px 15px 0 0; z-index: 4;"></div>
+                    <div class="a-shirt" id="s-color"></div>
                 </div>
                 <div class="speech-bubble">
-                    <p id="question-text">Loading...</p>
+                    <p id="question-text">Preparando...</p>
                 </div>
             </div>
             <div class="options-area" id="options-container"></div>
@@ -111,76 +147,78 @@
 
     <script>
         const originalDatabase = [
-            { q: "Let's go to the zoo tomorrow!", options: ["It is closed.", "How many?", "Nice monkey!"], correct: 0, gender: "man", hair: "#4a3121", shirt: "#3f51b5" },
-            { q: "May I have my bill?", options: ["Not cool.", "A hot drink?", "Sure!"], correct: 2, gender: "woman", hair: "#C65102", shirt: "#E91E63" },
-            { q: "Why is she working at the city center?", options: ["Fine!", "Come on!", "No idea!"], correct: 2, gender: "man", hair: "#2C3E50", shirt: "#FF9800" },
-            { q: "Can you hold the camera?", options: ["That's quick!", "Of course.", "May I keep this?"], correct: 1, gender: "woman", hair: "#F1C40F", shirt: "#9C27B0" },
-            { q: "Honey, I invited my parents to the party.", options: ["Be careful!", "That's great!", "As soon as possible!"], correct: 1, gender: "man", hair: "#4A3121", shirt: "#2196F3" },
-            { q: "Was it a wonderful journey?", options: ["You're lucky!", "Very kind of you!", "Just amazing!"], correct: 2, gender: "woman", hair: "#5D4037", shirt: "#009688" },
-            { q: "Hey Mark! You should visit us next November.", options: ["How often?", "I'd love to!", "Let's look for it."], correct: 1, gender: "man", hair: "#1A1A1A", shirt: "#673AB7" },
-            { q: "Anna missed the train.", options: ["That's terrible!", "Never again.", "How long is it?"], correct: 0, gender: "woman", hair: "#8D6E63", shirt: "#CDDC39" },
-            { q: "Have you got a dress I can wear?", options: ["That's fine!", "Sure!", "Enjoy!"], correct: 1, gender: "man", hair: "#4E342E", shirt: "#3F51B5" },
-            { q: "We couldn't swim in the pool yesterday.", options: ["Be careful!", "That's exciting!", "What happened?"], correct: 2, gender: "woman", hair: "#F48FB1", shirt: "#8E24AA" },
-            { q: "Where did they buy their new car?", options: ["I don't know.", "You are right.", "It's bigger."], correct: 0, gender: "man", hair: "#546E7A", shirt: "#00BCD4" },
-            { q: "I'm going to the art exhibition soon.", options: ["By the way.", "How long ago?", "How interesting!"], correct: 2, gender: "woman", hair: "#FFB300", shirt: "#FF5722" },
-            { q: "We haven't discussed our tour plans yet.", options: ["You poor thing.", "Let's do it now.", "As late as possible."], correct: 1, gender: "man", hair: "#263238", shirt: "#4CAF50" },
-            { q: "Have you got any spare change?", options: ["Let me check", "I've already changed it", "I lost my spare"], correct: 0, gender: "woman", hair: "#795548", shirt: "#009688" },
-            { q: "Until what time does the tube work?", options: ["It goes until summer time", "The last train has already passed", "There's not enough time to work"], correct: 0, gender: "man", hair: "#455A64", shirt: "#607D8B" }, // CORREGIDA: correct index 0
-            { q: "Did he give you the 10 quid I left you?", options: ["He left you there yesterday", "He doesn't like to give anything", "What's that money for?"], correct: 2, gender: "woman", hair: "#A1887F", shirt: "#FF4081" },
-            { q: "It's been a lovely supper, ________?", options: ["hasn't it", "it is", "it has"], correct: 0, gender: "man", hair: "#212121", shirt: "#8BC34A" },
-            { q: "Excuse me! Can you tell me where the loo is?", options: ["It's near the chemist", "It's behind the counter", "It's right there"], correct: 2, gender: "woman", hair: "#FFD54F", shirt: "#673AB7" },
-            { q: "Who's Patricia?", options: ["She's fine.", "She's my friend.", "She's Spanish."], correct: 1, gender: "woman", hair: "#C2185B", shirt: "#FBC02D" },
-            { q: "Could you telephone me this evening?", options: ["I will if I can.", "I'll tell him for you.", "If I'm not there, speak to John."], correct: 0, gender: "man", hair: "#0D47A1", shirt: "#FFCA28" },
-            { q: "Have you turned off the computer?", options: ["I don't want it.", "It's on the left.", "I'm still using it."], correct: 2, gender: "woman", hair: "#4CAF50", shirt: "#E91E63" },
-            { q: "When do you finish your class?", options: ["Yesterday.", "At six thirty.", "Two hours ago."], correct: 1, gender: "man", hair: "#795548", shirt: "#3F51B5" },
-            { q: "I think Jane's a very good teacher.", options: ["Who is it?", "How far?", "Do you?"], correct: 2, gender: "woman", hair: "#311B92", shirt: "#00C853" },
-            { q: "The temperature is below zero here.", options: ["Let's go inside.", "Take off your coat.", "It's downstairs."], correct: 0, gender: "woman", hair: "#1de9b6", shirt: "#00b0ff" },
-            { q: "I couldn't finish my homework, Lily!", options: ["Very often!", "That's terrible!", "Wait for it!"], correct: 1, gender: "man", hair: "#6d4c41", shirt: "#ff5722" },
-            { q: "I don't like meatballs.", options: ["Have some chicken.", "It's in the kitchen.", "That's a lot."], correct: 0, gender: "woman", hair: "#D84315", shirt: "#2E7D32" },
-            { q: "Would you like an apple?", options: ["You're right.", "Yes, please.", "So do I."], correct: 1, gender: "man", hair: "#1A237E", shirt: "#AD1457" },
-            { q: "I think Charlie's is the best café in town!", options: ["How much is it?", "Was it wrong?", "Is it near?"], correct: 2, gender: "woman", hair: "#FFEB3B", shirt: "#6A1B9A" },
-            { q: "I met my new neighbor yesterday. She's a Brazilian singer.", options: ["Welcome!", "Awesome!", "Surprise!"], correct: 1, gender: "man", hair: "#00695C", shirt: "#EF6C00" },
-            { q: "Are you going to the gym tonight?", options: ["Maybe tomorrow.", "Not much.", "Twice a month."], correct: 0, gender: "woman", hair: "#4E342E", shirt: "#1565C0" },
-            { q: "How long will the journey take?", options: ["Over two hours.", "At midnight.", "I won't be late."], correct: 0, gender: "man", hair: "#004D40", shirt: "#8BC34A" },
-            { q: "May I borrow your bracelet, please?", options: ["A little bit.", "In cash.", "Sure."], correct: 2, gender: "woman", hair: "#880E4F", shirt: "#FFEB3B" },
-            { q: "Oh, dear! I forgot how to use this cell phone.", options: ["It's repaired.", "Let me help you.", "Be prepared."], correct: 1, gender: "man", hair: "#E65100", shirt: "#03A9F4" },
-            { q: "I can clean the house for you today.", options: ["That's nice!", "They're mine.", "How many?"], correct: 0, gender: "woman", hair: "#BA68C8", shirt: "#009688" },
-            { q: "Shall we cook something? I'm hungry.", options: ["How often?", "I brought one!", "What about chicken?"], correct: 2, gender: "man", hair: "#795548", shirt: "#FFC107" },
-            { q: "Let's go to the park and play tennis!", options: ["Answer!", "Again?", "Bye."], correct: 1, gender: "woman", hair: "#4527A0", shirt: "#00E676" },
-            { q: "I'm afraid I have to buy a better laptop.", options: ["Not often.", "That's brilliant!", "What's wrong?"], correct: 2, gender: "man", hair: "#37474F", shirt: "#FF3D00" },
-            { q: "Have you joined the theater club yet?", options: ["A month ago.", "Yes, I agree.", "At the moment."], correct: 0, gender: "woman", hair: "#00838F", shirt: "#E91E63" },
-            { q: "Make sure that you keep the medicine in the cabinet.", options: ["It's kind.", "See you soon.", "Of course!"], correct: 2, gender: "man", hair: "#2E7D32", shirt: "#FF9100" },
-            { q: "So, who is going to repair the engine?", options: ["I'll do it myself.", "I'll go straight.", "I'll look for it."], correct: 0, gender: "woman", hair: "#6D4C41", shirt: "#2979FF" },
-            { q: "I can go to the restaurant and get some food.", options: ["Whose rice?", "That's really nice!", "Look at me."], correct: 1, gender: "man", hair: "#4E342E", shirt: "#8BC34A" },
-            { q: "I must go home.", options: ["Who is wrong?", "That's sad!", "It's brilliant."], correct: 1, gender: "woman", hair: "#7B1FA2", shirt: "#FFEB3B" },
-            { q: "I'll give you your earrings back tomorrow.", options: ["It's a special set.", "Sure, no problem.", "Wonderful jewelry."], correct: 1, gender: "man", hair: "#263238", shirt: "#FFEB3B" },
-            { q: "Good to have you back in the school again!", options: ["Yes, that's funny.", "Oh! How silly.", "Thanks, I'm happy."], correct: 2, gender: "woman", hair: "#E91E63", shirt: "#00BCD4" },
-            { q: "Son, stop it! You could hurt someone!", options: ["Help me, mom!", "That's sweet!", "All right!"], correct: 2, gender: "man", hair: "#4A3121", shirt: "#FF5722" },
-            { q: "Do you want to make an appointment with the designer?", options: ["Just before?", "Of course!", "Last February."], correct: 1, gender: "woman", hair: "#F1C40F", shirt: "#4A148C" },
-            { q: "How did you get that dictionary?", options: ["I borrowed it.", "Do you have a dollar?", "A minute ago."], correct: 0, gender: "man", hair: "#37474F", shirt: "#4CAF50" },
-            { q: "We got free tickets. These two are for you.", options: ["Thank you.", "I'm worried.", "That's the best one."], correct: 0, gender: "woman", hair: "#6D4C41", shirt: "#00ACC1" },
-            { q: "What time do you usually start work on weekends?", options: ["At noon.", "Only once.", "It's tomorrow."], correct: 0, gender: "man", hair: "#455A64", shirt: "#F4511E" },
-            { q: "Look at that modern laptop. It's not expensive!", options: ["Anything else?", "It's the winner!", "It's on sale."], correct: 2, gender: "woman", hair: "#C2185B", shirt: "#CDDC39" },
-            { q: "Hey, are you studying Spanish now?", options: ["I'm fine.", "That's right.", "It's ok."], correct: 1, gender: "man", hair: "#1A237E", shirt: "#D81B60" },
-            { q: "Hello. Can you please help me? I've lost my suitcase!", options: ["It's too early.", "Hey! Be careful.", "Can you describe it?"], correct: 2, gender: "woman", hair: "#795548", shirt: "#2E7D32" },
-            { q: "Are you here for the music class?", options: ["See you!", "I'm not from here.", "Yes, I'm new."], correct: 2, gender: "woman", hair: "#FBC02D", shirt: "#009688" },
-            { q: "Let's go for a ride, it's a sunny day!", options: ["Are we around?", "Nothing more.", "It's the best idea!"], correct: 2, gender: "man", hair: "#795548", shirt: "#4CAF50" },
-            { q: "Why didn't you put your new coat on yesterday?", options: ["I liked jeans.", "Let's dress up.", "It was too warm."], correct: 2, gender: "woman", hair: "#4E342E", shirt: "#E91E63" },
-            { q: "This movie is about a really big family.", options: ["Is it good?", "Is that a lot?", "Is your mom OK?"], correct: 0, gender: "man", hair: "#37474F", shirt: "#2196F3" },
-            { q: "Why are they hiding?", options: ["Come on!", "I've got no idea.", "Is it near?"], correct: 1, gender: "woman", hair: "#5D4037", shirt: "#9C27B0" },
-            { q: "Everyone bought tickets for the rock concert.", options: ["Is it on Saturday?", "There was noise.", "It is fair!"], correct: 0, gender: "man", hair: "#1A1A1A", shirt: "#F44336" },
-            { q: "It seems I'll be the new boss of the business department.", options: ["Excuse me!", "It's ready!", "Congratulations!"], correct: 2, gender: "woman", hair: "#F1C40F", shirt: "#3F51B5" },
-            { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, gender: "man", hair: "#BF360C", shirt: "#4FC3F7" }
+            { q: "Let's go to the zoo tomorrow!", options: ["It is closed.", "How many?", "Nice monkey!"], correct: 0, gender: "man", hair: "#2d3436", shirt: "#0984e3" },
+            { q: "May I have my bill?", options: ["Not cool.", "A hot drink?", "Sure!"], correct: 2, gender: "woman", hair: "#d63031", shirt: "#fd79a8" },
+            { q: "Why is she working at the city center?", options: ["Fine!", "Come on!", "No idea!"], correct: 2, gender: "man", hair: "#636e72", shirt: "#e67e22" },
+            { q: "Can you hold the camera?", options: ["That's quick!", "Of course.", "May I keep this?"], correct: 1, gender: "woman", hair: "#f1c40f", shirt: "#9b59b6" },
+            { q: "Honey, I invited my parents to the party.", options: ["Be careful!", "That's great!", "As soon as possible!"], correct: 1, gender: "man", hair: "#2d3436", shirt: "#00b894" },
+            { q: "Was it a wonderful journey?", options: ["You're lucky!", "Very kind of you!", "Just amazing!"], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#00cec9" },
+            { q: "Hey Mark! You should visit us next November.", options: ["How often?", "I'd love to!", "Let's look for it."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#6c5ce7" },
+            { q: "Anna missed the train.", options: ["That's terrible!", "Never again.", "How long is it?"], correct: 0, gender: "woman", hair: "#e17055", shirt: "#fab1a0" },
+            { q: "Have you got a dress I can wear?", options: ["That's fine!", "Sure!", "Enjoy!"], correct: 1, gender: "man", hair: "#2d3436", shirt: "#0984e3" },
+            { q: "We couldn't swim in the pool yesterday.", options: ["Be careful!", "That's exciting!", "What happened?"], correct: 2, gender: "woman", hair: "#fd79a8", shirt: "#e84393" },
+            { q: "Where did they buy their new car?", options: ["I don't know.", "You are right.", "It's bigger."], correct: 0, gender: "man", hair: "#2d3436", shirt: "#00cec9" },
+            { q: "I'm going to the art exhibition soon.", options: ["By the way.", "How long ago?", "How interesting!"], correct: 2, gender: "woman", hair: "#fdcb6e", shirt: "#e17055" },
+            { q: "We haven't discussed our tour plans yet.", options: ["You poor thing.", "Let's do it now.", "As late as possible."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "Have you got any spare change?", options: ["Let me check", "I've already changed it", "I lost my spare"], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#00b894" },
+            { q: "Until what time does the tube work?", options: ["It goes until summer time", "The last train has already passed", "There's not enough time to work"], correct: 0, gender: "man", hair: "#2d3436", shirt: "#636e72" },
+            { q: "Did he give you the 10 quid I left you?", options: ["He left you there yesterday", "He doesn't like to give anything", "What's that money for?"], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#ff7675" },
+            { q: "It's been a lovely supper, ________?", options: ["hasn't it", "it is", "it has"], correct: 0, gender: "man", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "Excuse me! Can you tell me where the loo is?", options: ["It's near the chemist", "It's behind the counter", "It's right there"], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#a29bfe" },
+            { q: "Who's Patricia?", options: ["She's fine.", "She's my friend.", "She's Spanish."], correct: 1, gender: "woman", hair: "#2d3436", shirt: "#fdcb6e" },
+            { q: "Could you telephone me this evening?", options: ["I will if I can.", "I'll tell him for you.", "If I'm not there, speak to John."], correct: 0, gender: "man", hair: "#2d3436", shirt: "#ffeaa7" },
+            { q: "Have you turned off the computer?", options: ["I don't want it.", "It's on the left.", "I'm still using it."], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#fab1a0" },
+            { q: "When do you finish your class?", options: ["Yesterday.", "At six thirty.", "Two hours ago."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#0984e3" },
+            { q: "I think Jane's a very good teacher.", options: ["Who is it?", "How far?", "Do you?"], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "The temperature is below zero here.", options: ["Let's go inside.", "Take off your coat.", "It's downstairs."], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#74b9ff" },
+            { q: "I couldn't finish my homework, Lily!", options: ["Very often!", "That's terrible!", "Wait for it!"], correct: 1, gender: "man", hair: "#2d3436", shirt: "#e17055" },
+            { q: "I don't like meatballs.", options: ["Have some chicken.", "It's in the kitchen.", "That's a lot."], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#00b894" },
+            { q: "Would you like an apple?", options: ["You're right.", "Yes, please.", "So do I."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#d63031" },
+            { q: "I think Charlie's is the best café in town!", options: ["How much is it?", "Was it wrong?", "Is it near?"], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#a29bfe" },
+            { q: "I met my new neighbor yesterday. She's a Brazilian singer.", options: ["Welcome!", "Awesome!", "Surprise!"], correct: 1, gender: "man", hair: "#2d3436", shirt: "#e67e22" },
+            { q: "Are you going to the gym tonight?", options: ["Maybe tomorrow.", "Not much.", "Twice a month."], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#0984e3" },
+            { q: "How long will the journey take?", options: ["Over two hours.", "At midnight.", "I won't be late."], correct: 0, gender: "man", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "May I borrow your bracelet, please?", options: ["A little bit.", "In cash.", "Sure."], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#fdcb6e" },
+            { q: "Oh, dear! I forgot how to use this cell phone.", options: ["It's repaired.", "Let me help you.", "Be prepared."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#74b9ff" },
+            { q: "I can clean the house for you today.", options: ["That's nice!", "They're mine.", "How many?"], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#00b894" },
+            { q: "Shall we cook something? I'm hungry.", options: ["How often?", "I brought one!", "What about chicken?"], correct: 2, gender: "man", hair: "#2d3436", shirt: "#fab1a0" },
+            { q: "Let's go to the park and play tennis!", options: ["Answer!", "Again?", "Bye."], correct: 1, gender: "woman", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "I'm afraid I have to buy a better laptop.", options: ["Not often.", "That's brilliant!", "What's wrong?"], correct: 2, gender: "man", hair: "#2d3436", shirt: "#d63031" },
+            { q: "Have you joined the theater club yet?", options: ["A month ago.", "Yes, I agree.", "At the moment."], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#e84393" },
+            { q: "Make sure that you keep the medicine in the cabinet.", options: ["It's kind.", "See you soon.", "Of course!"], correct: 2, gender: "man", hair: "#2d3436", shirt: "#e67e22" },
+            { q: "So, who is going to repair the engine?", options: ["I'll do it myself.", "I'll go straight.", "I'll look for it."], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#74b9ff" },
+            { q: "I can go to the restaurant and get some food.", options: ["Whose rice?", "That's really nice!", "Look at me."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "I must go home.", options: ["Who is wrong?", "That's sad!", "It's brilliant."], correct: 1, gender: "woman", hair: "#2d3436", shirt: "#a29bfe" },
+            { q: "I'll give you your earrings back tomorrow.", options: ["It's a special set.", "Sure, no problem.", "Wonderful jewelry."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#fdcb6e" },
+            { q: "Good to have you back in the school again!", options: ["Yes, that's funny.", "Oh! How silly.", "Thanks, I'm happy."], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#e84393" },
+            { q: "Son, stop it! You could hurt someone!", options: ["Help me, mom!", "That's sweet!", "All right!"], correct: 2, gender: "man", hair: "#2d3436", shirt: "#e17055" },
+            { q: "Do you want to make an appointment with the designer?", options: ["Just before?", "Of course!", "Last February."], correct: 1, gender: "woman", hair: "#2d3436", shirt: "#6c5ce7" },
+            { q: "How did you get that dictionary?", options: ["I borrowed it.", "Do you have a dollar?", "A minute ago."], correct: 0, gender: "man", hair: "#2d3436", shirt: "#00b894" },
+            { q: "We got free tickets. These two are for you.", options: ["Thank you.", "I'm worried.", "That's the best one."], correct: 0, gender: "woman", hair: "#2d3436", shirt: "#00cec9" },
+            { q: "What time do you usually start work on weekends?", options: ["At noon.", "Only once.", "It's tomorrow."], correct: 0, gender: "man", hair: "#2d3436", shirt: "#d63031" },
+            { q: "Look at that modern laptop. It's not expensive!", options: ["Anything else?", "It's the winner!", "It's on sale."], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "Hey, are you studying Spanish now?", options: ["I'm fine.", "That's right.", "It's ok."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#fd79a8" },
+            { q: "Hello. Can you please help me? I've lost my suitcase!", options: ["It's too early.", "Hey! Be careful.", "Can you describe it?"], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#00b894" },
+            { q: "Are you here for the music class?", options: ["See you!", "I'm not from here.", "Yes, I'm new."], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#fdcb6e" },
+            { q: "Let's go for a ride, it's a sunny day!", options: ["Are we around?", "Nothing more.", "It's the best idea!"], correct: 2, gender: "man", hair: "#2d3436", shirt: "#55efc4" },
+            { q: "Why didn't you put your new coat on yesterday?", options: ["I liked jeans.", "Let's dress up.", "It was too warm."], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#ff7675" },
+            { q: "This movie is about a really big family.", options: ["Is it good?", "Is that a lot?", "Is your mom OK?"], correct: 0, gender: "man", hair: "#2d3436", shirt: "#0984e3" },
+            { q: "Why are they hiding?", options: ["Come on!", "I've got no idea.", "Is it near?"], correct: 1, gender: "woman", hair: "#2d3436", shirt: "#a29bfe" },
+            { q: "Everyone bought tickets for the rock concert.", options: ["Is it on Saturday?", "There was noise.", "It is fair!"], correct: 0, gender: "man", hair: "#2d3436", shirt: "#d63031" },
+            { q: "It seems I'll be the new boss of the business department.", options: ["Excuse me!", "It's ready!", "Congratulations!"], correct: 2, gender: "woman", hair: "#2d3436", shirt: "#6c5ce7" },
+            { q: "How about going to the cinema?", options: ["I'm a student.", "That sounds great!", "It's 5 o'clock."], correct: 1, gender: "man", hair: "#2d3436", shirt: "#74b9ff" }
         ];
 
         let database = [];
         let currentIndex = 0;
         let scoreWins = 0;
         let scoreLosses = 0;
-        let audioCtx = null;
         let isProcessing = false;
+        let startTime = null;
+        let timerInterval = null;
+        let audioCtx = null;
 
-        function shuffleQuestions(array) {
+        function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
@@ -204,31 +242,42 @@
             osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
 
-        function toggleMenu() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('active');
-            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+        function startTimer() {
+            if (startTime) return;
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const diff = Date.now() - startTime;
+                const m = Math.floor(diff / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                document.getElementById('timer-display').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }, 1000);
         }
 
         function loadQuestion() {
             isProcessing = false;
             const data = database[currentIndex];
+            
             document.getElementById('question-text').innerText = data.q;
             document.getElementById('counter-text').innerText = `${currentIndex + 1}/${database.length}`;
             
-            const hair = document.getElementById('hair-style');
-            const shirt = document.getElementById('shirt-style');
-            hair.className = "hair " + data.gender;
-            hair.style.backgroundColor = data.hair;
-            shirt.style.backgroundColor = data.shirt;
+            // Progreso
+            const prog = ((currentIndex) / database.length) * 100;
+            document.getElementById('progress-bar').style.width = prog + "%";
+
+            // Reset Avatar
+            document.getElementById('e-l').style.height = '10px';
+            document.getElementById('e-r').style.height = '10px';
+            document.getElementById('m-mouth').style.height = '8px';
+            document.getElementById('m-mouth').style.borderRadius = '0 0 10px 10px';
+
+            document.getElementById('h-color').style.backgroundColor = data.hair;
+            document.getElementById('s-color').style.backgroundColor = data.shirt;
 
             const container = document.getElementById('options-container');
             container.innerHTML = '';
-            
             data.options.forEach((opt, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'comic-btn';
+                btn.className = 'btn-app';
                 btn.id = `btn-${index}`;
                 btn.innerText = `${String.fromCharCode(65 + index)}. ${opt}`;
                 btn.onclick = () => verify(btn, index);
@@ -239,28 +288,39 @@
         function verify(btn, selectedIndex) {
             if (isProcessing) return;
             isProcessing = true;
+            startTimer();
             initAudio();
 
             const correctIndex = database[currentIndex].correct;
-            const buttons = document.querySelectorAll('.comic-btn');
+            const buttons = document.querySelectorAll('.btn-app');
             buttons.forEach(b => b.classList.add('disabled'));
 
             if(selectedIndex === correctIndex) {
                 btn.classList.add('correct');
                 scoreWins++;
                 document.getElementById('wins').innerText = scoreWins;
+                
+                // Ojos felices
+                document.getElementById('e-l').style.height = '4px';
+                document.getElementById('e-r').style.height = '4px';
+                
                 playTone(600, 'sine', 0.15);
-                showFeedback("¡EXCELENTE!", "🌟", true);
+                showFeedback("¡SÚPER!", "#2ecc71");
                 setTimeout(nextQuestion, 1200);
             } else {
                 btn.classList.add('wrong');
                 document.getElementById(`btn-${correctIndex}`).classList.add('reveal');
                 scoreLosses++;
                 document.getElementById('losses').innerText = scoreLosses;
+                
+                // Ojos sorpresa
+                document.getElementById('e-l').style.height = '12px';
+                document.getElementById('e-r').style.height = '12px';
+
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                 playTone(150, 'square', 0.3);
-                showFeedback("INCORRECTO", "❌", false);
-                setTimeout(nextQuestion, 2000);
+                showFeedback("¡CASI!", "#ff7675");
+                setTimeout(nextQuestion, 2200);
             }
         }
 
@@ -269,26 +329,50 @@
                 currentIndex++;
                 loadQuestion();
             } else {
-                showFeedback("COMPLETADO", "🏆", true);
+                finishExam();
             }
         }
 
-        function showFeedback(text, emoji, isCorrect) {
+        function finishExam() {
+            clearInterval(timerInterval);
+            document.getElementById('result-screen').style.display = 'flex';
+            document.getElementById('final-score').innerText = `${scoreWins} / ${database.length}`;
+            const percent = Math.round((scoreWins / database.length) * 100);
+            document.getElementById('final-percent').innerText = `${percent}% de efectividad`;
+            document.getElementById('result-time').innerText = "Tiempo Total: " + document.getElementById('timer-display').innerText;
+
+            let msg = "";
+            let emo = "";
+            if(percent >= 90) { msg = "¡Nivel Experto! 😎"; emo = "🏆"; }
+            else if(percent >= 70) { msg = "¡Muy avanzado! 🔥"; emo = "🥈"; }
+            else { msg = "¡Sigue así! 💪"; emo = "🥉"; }
+            
+            document.getElementById('result-msg').innerText = msg;
+            document.getElementById('result-emoji').innerText = emo;
+        }
+
+        function showFeedback(text, color) {
             const msg = document.getElementById('feedback-msg');
-            msg.innerHTML = `<span>${text}</span> <span>${emoji}</span>`;
-            msg.style.display = 'flex';
-            msg.style.backgroundColor = isCorrect ? '#4caf50' : '#f44336';
-            msg.style.color = 'white';
-            setTimeout(() => { msg.style.display = 'none'; }, 1500);
+            msg.innerText = text;
+            msg.style.display = 'block';
+            msg.style.backgroundColor = color;
+            setTimeout(() => { msg.style.display = 'none'; }, 1000);
+        }
+
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
         }
 
         window.onload = () => {
-            database = shuffleQuestions([...originalDatabase]);
+            database = shuffle([...originalDatabase]);
             const list = document.getElementById('menu-list');
             database.forEach((_, i) => {
                 const item = document.createElement('div');
                 item.className = 'nav-item';
-                item.innerText = `Pregunta ${i + 1}`;
+                item.innerText = `Q${i + 1}`;
                 item.onclick = () => { currentIndex = i; loadQuestion(); toggleMenu(); };
                 list.appendChild(item);
             });
